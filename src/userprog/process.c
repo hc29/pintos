@@ -40,7 +40,8 @@ process_execute (const char *file_name)
 
   ///:::
   char *save_ptr;
-  extracted_file_name = malloc(strlen(file_name)+1);
+  char *extracted_file_name;
+  extracted_file_name = (char *) malloc(strlen(file_name)+1);
   strlcpy (extracted_file_name, file_name, strlen(file_name)+1);
   extracted_file_name = strtok_r(extracted_file_name, " ", &save_ptr);
 
@@ -94,6 +95,29 @@ start_process (void *file_name_)
 int
 process_wait (tid_t child_tid UNUSED) 
 {
+  ///:::
+  struct list_elem * elem;
+  struct thread * req = NULL;
+  for (elem = list_begin(&thread_current()->children); elem != list_end(&thread_current->children); elem = list_next(elem))
+  {
+    struct thread * t = list_entry(elem, struct thread, child_elem);
+    if (t->tid == child_tid)
+    {
+      req = t;
+      break;
+    }
+
+    if (!req)
+      return -1;
+
+    list_remove(&req->child_elem);
+    sema_down(&req->comp);
+
+    return req->exit_status;
+  }
+
+
+
   return -1;
 }
 
@@ -201,7 +225,7 @@ struct Elf32_Phdr
 #define PF_W 2          /* Writable. */
 #define PF_R 4          /* Readable. */
 
-static bool setup_stack (void **esp);
+static bool setup_stack (void **esp, char *file_name);
 static bool validate_segment (const struct Elf32_Phdr *, struct file *);
 static bool load_segment (struct file *file, off_t ofs, uint8_t *upage,
                           uint32_t read_bytes, uint32_t zero_bytes,
@@ -230,7 +254,8 @@ load (const char *file_name, void (**eip) (void), void **esp)
   /* Open executable file. */
   ///:::
   char *save_ptr;
-  extracted_file_name = malloc(strlen(file_name)+1);
+  char *extracted_file_name;
+  extracted_file_name = (char *) malloc(strlen(file_name)+1);
   strlcpy (extracted_file_name, file_name, strlen(file_name)+1);
   extracted_file_name = strtok_r(extracted_file_name, " ", &save_ptr);
   file = filesys_open (extracted_file_name);

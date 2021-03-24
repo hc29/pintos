@@ -394,6 +394,8 @@ thread_exit (void)
 {
   ASSERT (!intr_context ());
 
+  sema_up(&thread_current()->comp);
+
 #ifdef USERPROG
   process_exit ();
 #endif
@@ -591,6 +593,11 @@ init_thread (struct thread *t, const char *name, int priority)
   t->nice = 0;
   if (thread_mlfqs) calc_mlfqs_priority(t);
   t->magic = THREAD_MAGIC;
+  ///:::
+  list_init(&t->children);
+  sema_init(&t->comp, 0);
+  t->exit_status = 29;
+  t->fd = 2;
   list_push_back (&all_list, &t->allelem);
 }
 

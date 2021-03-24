@@ -101,6 +101,17 @@ struct thread
 
     struct list_elem mlfqs_elem;
 
+    ///:::
+    struct list children;
+
+    struct list_elem child_elem;
+
+    struct semaphore comp;
+
+    int exit_status;
+
+    int fd;
+
 #ifdef USERPROG
     /* Owned by userprog/process.c. */
     uint32_t *pagedir;                  /* Page directory. */
