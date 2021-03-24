@@ -38,8 +38,14 @@ process_execute (const char *file_name)
     return TID_ERROR;
   strlcpy (fn_copy, file_name, PGSIZE);
 
+  ///:::
+  char *save_ptr;
+  extracted_file_name = malloc(strlen(file_name)+1);
+  strlcpy (extracted_file_name, file_name, strlen(file_name)+1);
+  extracted_file_name = strtok_r(extracted_file_name, " ", &save_ptr);
+
   /* Create a new thread to execute FILE_NAME. */
-  tid = thread_create (file_name, PRI_DEFAULT, start_process, fn_copy);
+  tid = thread_create (extracted_file_name, PRI_DEFAULT, start_process, fn_copy);
   if (tid == TID_ERROR)
     palloc_free_page (fn_copy); 
   return tid;
@@ -222,7 +228,12 @@ load (const char *file_name, void (**eip) (void), void **esp)
   process_activate ();
 
   /* Open executable file. */
-  file = filesys_open (file_name);
+  ///:::
+  char *save_ptr;
+  extracted_file_name = malloc(strlen(file_name)+1);
+  strlcpy (extracted_file_name, file_name, strlen(file_name)+1);
+  extracted_file_name = strtok_r(extracted_file_name, " ", &save_ptr);
+  file = filesys_open (extracted_file_name);
   if (file == NULL) 
     {
       printf ("load: %s: open failed\n", file_name);
@@ -302,7 +313,7 @@ load (const char *file_name, void (**eip) (void), void **esp)
     }
 
   /* Set up stack. */
-  if (!setup_stack (esp))
+  if (!setup_stack (esp, file_name))
     goto done;
 
   /* Start address. */
@@ -427,7 +438,7 @@ load_segment (struct file *file, off_t ofs, uint8_t *upage,
 /* Create a minimal stack by mapping a zeroed page at the top of
    user virtual memory. */
 static bool
-setup_stack (void **esp) 
+setup_stack (void **esp, char *file_name) 
 {
   uint8_t *kpage;
   bool success = false;
@@ -437,10 +448,64 @@ setup_stack (void **esp)
     {
       success = install_page (((uint8_t *) PHYS_BASE) - PGSIZE, kpage, true);
       if (success)
+      {
         *esp = PHYS_BASE;
+
+        //:::
+        char *word[10];
+        char *save_ptr;
+        int argc=0;
+        word[argc] = strtok_r(file_name, " ", &save_ptr);
+        while (word[argc] != NULL)
+        {
+          argc++;
+          word[argc] = strtok_r(NULL, " ", &save_ptr);
+        }
+
+        char *argv[argc];
+        int i;
+        for (i=0; i<argc; i++)
+        {
+          *esp -= strlen(word[i]) + 1;
+          memcpy(*esp, word[i], strlen(word[i])+1);
+
+          argv[i] = *esp;
+        }
+
+        while ((int)(*esp)%4)
+        {
+          *esp -= sizeof(char);
+          char filler = 0;
+          memcpy(*esp, &filler, sizeof(char));
+        }
+
+        char *null_p = NULL;
+
+        *esp -= sizeof(char *);
+        memcpy(*esp, &null_p, sizeof(char *));
+
+        for (i=argc-1; i>=0; i--)
+        {
+          *esp -= sizeof(char *);
+          memcpy(*esp, &argv[i], sizeof(char *));
+        }
+
+        int *argv_p = *esp;
+        *esp -= sizeof(int);
+        memcpy(*esp, &argv_p, sizeof(int));
+
+        esp -= sizeof(int);
+        memcpy(*esp, &argc, sizeof(int));
+
+        *esp -= sizeof(char *);
+        memcpy(*esp, &null_p, (sizeof(char *)));
+
+      }
       else
         palloc_free_page (kpage);
     }
+
+
   return success;
 }
 
