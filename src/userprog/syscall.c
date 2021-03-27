@@ -37,8 +37,8 @@ syscall_handler (struct intr_frame *f UNUSED)
 		sys_write(*(p+5),(const void *)(*(p+6)), (unsigned)(*(p+7)));
 		f->eax = *(p+7);
 
-		default:
-		printf("System call not implemented yet\n");
+		//default:
+		//printf("System call not implemented yet %d\n", *p);
 
 	}
 //  printf ("system call!\n");

@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdlib.h>
 #include "userprog/gdt.h"
 #include "userprog/pagedir.h"
 #include "userprog/tss.h"
@@ -45,8 +46,10 @@ process_execute (const char *file_name)
   strlcpy (extracted_file_name, file_name, strlen(file_name)+1);
   extracted_file_name = strtok_r(extracted_file_name, " ", &save_ptr);
 
+  //printf("%s\n", extracted_file_name);
   /* Create a new thread to execute FILE_NAME. */
   tid = thread_create (extracted_file_name, PRI_DEFAULT, start_process, fn_copy);
+  //printf("%s\n", extracted_file_name);
   if (tid == TID_ERROR)
     palloc_free_page (fn_copy); 
   return tid;
@@ -61,6 +64,7 @@ start_process (void *file_name_)
   struct intr_frame if_;
   bool success;
 
+  //printf("11%s\n", file_name_);
   /* Initialize interrupt frame and load executable. */
   memset (&if_, 0, sizeof if_);
   if_.gs = if_.fs = if_.es = if_.ds = if_.ss = SEL_UDSEG;
@@ -95,17 +99,21 @@ start_process (void *file_name_)
 int
 process_wait (tid_t child_tid UNUSED) 
 {
+  while(1);
   ///:::
+/*  printf("%s %d\n", thread_current()->name, thread_current()->tid);
   struct list_elem * elem;
   struct thread * req = NULL;
-  for (elem = list_begin(&thread_current()->children); elem != list_end(&thread_current()->children); elem = list_next(elem))
+  for (elem = list_begin(&(thread_current()->children)); elem != list_end(&(thread_current()->children)); elem = list_next(elem))
   {
     struct thread * t = list_entry(elem, struct thread, child_elem);
+    printf("%d %d\n", t->tid, child_tid);
     if (t->tid == child_tid)
     {
       req = t;
       break;
     }
+  }
 
     if (!req)
       return -1;
@@ -114,12 +122,9 @@ process_wait (tid_t child_tid UNUSED)
     sema_down(&req->comp);
 
     return req->exit_status;
-  }
-
-
-
-  return -1;
+    */
 }
+
 
 /* Free the current process's resources. */
 void
@@ -238,6 +243,7 @@ static bool load_segment (struct file *file, off_t ofs, uint8_t *upage,
 bool
 load (const char *file_name, void (**eip) (void), void **esp) 
 {
+  //printf("load%s\n", file_name);
   struct thread *t = thread_current ();
   struct Elf32_Ehdr ehdr;
   struct file *file = NULL;
@@ -519,7 +525,12 @@ setup_stack (void **esp, char *file_name)
         *esp -= sizeof(int);
         memcpy(*esp, &argv_p, sizeof(int));
 
-        esp -= sizeof(int);
+        //printf("in setup_stack %s\n", file_name);
+
+        //printf("setup_stack %d, ", argc);
+        //for (i=0; i<argc; i++) printf("%s, ", argv[i]);
+        //printf("\n");
+        *esp -= sizeof(int);
         memcpy(*esp, &argc, sizeof(int));
 
         *esp -= sizeof(char *);
