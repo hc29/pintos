@@ -5,10 +5,12 @@
 #include "threads/thread.h"
 #include "threads/vaddr.h"
 #include "userprog/pagedir.h"
+#include "userprog/process.h"
 
 static void syscall_handler (struct intr_frame *);
 void sys_exit(int status);
 void sys_write(int fd, const void* buffer, unsigned size);
+pid_t sys_exec(const char *cmdline);
 void check_address_validity(const void* vaddr);
 
 void
@@ -36,6 +38,12 @@ syscall_handler (struct intr_frame *f UNUSED)
 		check_address_validity(p+7);
 		sys_write(*(p+5),(const void *)(*(p+6)), (unsigned)(*(p+7)));
 		f->eax = *(p+7);
+
+		/*case SYS_EXEC:
+		check_address_validity(p+1);
+		check_address_validity(*(p+1));
+		f->eax = sys_exec((const char*)(p+1));
+		*/
 
 		//default:
 		//printf("System call not implemented yet %d\n", *p);
@@ -65,6 +73,18 @@ void sys_write(int fd, const void* buffer, unsigned size)
 		printf("Not supposed to print anywhere else for now\n");
 	}
 }
+
+
+pid_t sys_exec(const char *cmdline)
+{
+	pid_t pid;
+	char *cmdcopy = cmdline;
+	//lock_acquire(&file_lock);
+	pid = process_execute(cmdcopy);
+	//lock_release(&file_lock);
+	return pid;
+}
+
 
 ///:::
 void check_address_validity(const void* vaddr)
