@@ -274,7 +274,15 @@ thread_create (const char *name, int priority,
   tid = t->tid = allocate_tid ();
 
   //printf("Create %d %d\n", tid, thread_current()->tid);
-  list_push_back(&(thread_current()->children), &t->elem);
+  list_push_back(&(thread_current()->children), &t->child_elem);
+
+  /*for (elem = list_begin(&(thread_current()->children)); elem != list_end(&(thread_current()->children)); elem = list_next(elem))
+  {
+    struct thread * t = list_entry(elem, struct thread, child_elem);
+    printf("%d %d\n", t->tid, thread_current()->tid);
+  }*/
+
+  
   /* Prepare thread for first run by initializing its stack.
      Do this atomically so intermediate values for the 'stack' 
      member cannot be observed. */

@@ -99,9 +99,9 @@ start_process (void *file_name_)
 int
 process_wait (tid_t child_tid UNUSED) 
 {
-  while(1);
+  //while(1);
   ///:::
-/*  printf("%s %d\n", thread_current()->name, thread_current()->tid);
+  printf("%s %d\n", thread_current()->name, thread_current()->tid);
   struct list_elem * elem;
   struct thread * req = NULL;
   for (elem = list_begin(&(thread_current()->children)); elem != list_end(&(thread_current()->children)); elem = list_next(elem))
@@ -115,14 +115,14 @@ process_wait (tid_t child_tid UNUSED)
     }
   }
 
-    if (!req)
-      return -1;
+  if (!req)
+    return -1;
 
-    list_remove(&req->child_elem);
-    sema_down(&req->comp);
+  list_remove(&req->child_elem);
+  sema_down(&req->comp);
 
-    return req->exit_status;
-    */
+  return req->exit_status;
+    
 }
 
 
