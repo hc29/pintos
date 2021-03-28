@@ -76,6 +76,8 @@ typedef int tid_t;
    the `magic' member of the running thread's `struct thread' is
    set to THREAD_MAGIC.  Stack overflow will normally change this
    value, triggering the assertion. */
+
+
 /* The `elem' member has a dual purpose.  It can be an element in
    the run queue (thread.c), or it can be an element in a
    semaphore wait list (synch.c).  It can be used these two ways
@@ -95,23 +97,27 @@ struct thread
     int nice;
     struct list_elem allelem;           /* List element for all threads list. */
 
-		int64_t sleep_till;									//:::Used to store the time when the thread will be unblocked
-		struct list_elem block_elem;				//:::List element for threads_blocked list
+    int64_t sleep_till;                 //:::Used to store the time when the thread will be unblocked
+    struct list_elem block_elem;        //:::List element for threads_blocked list
     /* Shared between thread.c and synch.c. */
+
     struct list_elem elem;              /* List element. */
 
     struct list_elem mlfqs_elem;
 
     ///:::
-    struct list children;
+    struct thread *parent;
 
-    struct list_elem child_elem;
+    struct list children;
 
     struct semaphore comp;
 
+    struct semaphore sema_exec;
+
+    tid_t waiting_for;
+
     int exit_status;
 
-    int fd;
 
 #ifdef USERPROG
     /* Owned by userprog/process.c. */
@@ -122,6 +128,14 @@ struct thread
     unsigned magic;                     /* Detects stack overflow. */
   };
 
+struct child
+{
+  tid_t tid;
+  struct thread *child_thread;
+  struct  list_elem child_elem;
+  int exit_status;
+  bool used;
+};
 /* If false (default), use round-robin scheduler.
    If true, use multi-level feedback queue scheduler.
    Controlled by kernel command-line option "-o mlfqs". */

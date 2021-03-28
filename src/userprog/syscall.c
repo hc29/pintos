@@ -11,6 +11,7 @@ static void syscall_handler (struct intr_frame *);
 void sys_exit(int status);
 void sys_write(int fd, const void* buffer, unsigned size);
 pid_t sys_exec(const char *cmdline);
+int sys_wait(pid_t pid);
 void check_address_validity(const void* vaddr);
 
 void
@@ -25,11 +26,13 @@ syscall_handler (struct intr_frame *f UNUSED)
 	int *p = f->esp;
 	check_address_validity(p);
 
+	//printf("syscall_handler %d\n", *p);
 	switch(*p)
 	{
 		case SYS_EXIT:
 		check_address_validity(p+1);
 		sys_exit(*(p+1));
+		break;
 
 		case SYS_WRITE:
 		check_address_validity(p+5);
@@ -38,15 +41,21 @@ syscall_handler (struct intr_frame *f UNUSED)
 		check_address_validity(p+7);
 		sys_write(*(p+5),(const void *)(*(p+6)), (unsigned)(*(p+7)));
 		f->eax = *(p+7);
+		break;
 
-		/*case SYS_EXEC:
+		case SYS_EXEC:
 		check_address_validity(p+1);
 		check_address_validity(*(p+1));
 		f->eax = sys_exec((const char*)(p+1));
-		*/
+		break;
 
-		//default:
-		//printf("System call not implemented yet %d\n", *p);
+		case SYS_WAIT:
+		check_address_validity(p+1);
+		f->eax = sys_wait((pid_t) *(p+1));
+		break;
+
+		default:
+		printf("System call not implemented yet %d\n", *p);
 
 	}
 //  printf ("system call!\n");
@@ -57,7 +66,7 @@ syscall_handler (struct intr_frame *f UNUSED)
 void sys_exit(int status)
 {
 	thread_current()->exit_status = status;
-	printf("%s: exit status = %d\n", thread_current()->name, status);
+	printf("%s: exit(%d)\n", thread_current()->name, status);
 	thread_exit();
 }
 
@@ -74,15 +83,23 @@ void sys_write(int fd, const void* buffer, unsigned size)
 	}
 }
 
-
+///:::
 pid_t sys_exec(const char *cmdline)
 {
 	pid_t pid;
 	char *cmdcopy = cmdline;
-	//lock_acquire(&file_lock);
+	lock_acquire(&file_lock);
 	pid = process_execute(cmdcopy);
-	//lock_release(&file_lock);
+	lock_release(&file_lock);
+	printf("sys_exec %d\n", thread_current()->tid);
+	sema_down(&thread_current()->sema_exec);
 	return pid;
+}
+
+///:::
+int sys_wait(pid_t pid)
+{
+	return process_wait(pid);
 }
 
 

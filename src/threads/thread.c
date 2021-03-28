@@ -69,6 +69,8 @@ static unsigned thread_ticks;   /* # of timer ticks since last yield. */
    Controlled by kernel command-line option "-o mlfqs". */
 bool thread_mlfqs;
 
+struct lock file_lock;
+
 static void kernel_thread (thread_func *, void *aux);
 
 static void idle (void *aux UNUSED);
@@ -110,6 +112,7 @@ thread_init (void)
   lock_init (&tid_lock);
   list_init (&ready_list);
   list_init (&all_list);
+  lock_init(&file_lock);
   int i;
   for (i=PRI_MIN; i<=PRI_MAX; i++) list_init (&mlfqs_list[i]);
 
@@ -273,14 +276,21 @@ thread_create (const char *name, int priority,
   init_thread (t, name, priority);
   tid = t->tid = allocate_tid ();
 
-  //printf("Create %d %d\n", tid, thread_current()->tid);
-  list_push_back(&(thread_current()->children), &t->child_elem);
+  struct child *ch = malloc(sizeof(struct child));
+  ch->tid = tid;
+  ch->child_thread = t;
+  ch->exit_status = t->exit_status;
+  ch->used = false;
+  t->parent = thread_current();
+  //printf("Create %d %d\n", ch->child_thread->tid, t->parent->tid);
+  list_push_back(&(thread_current()->children), &ch->child_elem);
 
-  /*for (elem = list_begin(&(thread_current()->children)); elem != list_end(&(thread_current()->children)); elem = list_next(elem))
-  {
-    struct thread * t = list_entry(elem, struct thread, child_elem);
-    printf("%d %d\n", t->tid, thread_current()->tid);
-  }*/
+  //struct list_elem * elem;
+  //for (elem = list_begin(&(thread_current()->children)); elem != list_end(&(thread_current()->children)); elem = list_next(elem))
+  //{
+  //  struct child * t = list_entry(elem, struct child, child_elem);
+  //  printf("thread_create %d %d\n", t->tid, thread_current()->tid);
+  //}
 
   
   /* Prepare thread for first run by initializing its stack.
@@ -405,7 +415,8 @@ thread_exit (void)
 {
   ASSERT (!intr_context ());
 
-  sema_up(&thread_current()->comp);
+  if (thread_current()->parent->waiting_for == thread_current()->tid)
+    sema_up(&thread_current()->parent->comp);
 
 #ifdef USERPROG
   process_exit ();
@@ -607,8 +618,8 @@ init_thread (struct thread *t, const char *name, int priority)
   ///:::
   list_init(&t->children);
   sema_init(&t->comp, 0);
+  sema_init(&t->sema_exec, 0);
   t->exit_status = 29;
-  t->fd = 2;
   list_push_back (&all_list, &t->allelem);
 }
 

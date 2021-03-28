@@ -19,7 +19,6 @@
 #include "threads/thread.h"
 #include "threads/vaddr.h"
 
-struct lock file_lock;
 
 static thread_func start_process NO_RETURN;
 static bool load (const char *cmdline, void (**eip) (void), void **esp);
@@ -48,7 +47,7 @@ process_execute (const char *file_name)
   strlcpy (extracted_file_name, file_name, strlen(file_name)+1);
   extracted_file_name = strtok_r(extracted_file_name, " ", &save_ptr);
 
-  //printf("%s\n", extracted_file_name);
+  printf("process_execute %s\n", extracted_file_name);
   /* Create a new thread to execute FILE_NAME. */
   tid = thread_create (extracted_file_name, PRI_DEFAULT, start_process, fn_copy);
   //printf("%s\n", extracted_file_name);
@@ -78,6 +77,16 @@ start_process (void *file_name_)
   palloc_free_page (file_name);
   if (!success) 
     thread_exit ();
+  printf("start_process1 %d\n", thread_current()->tid);
+
+  struct thread * parent;
+  parent = thread_current()->parent;
+
+  if (parent != NULL)
+  {
+    printf("start_process2 %d\n", parent->tid);
+    sema_up(&parent->sema_exec);
+  }
 
   /* Start the user process by simulating a return from an
      interrupt, implemented by intr_exit (in
@@ -103,16 +112,17 @@ process_wait (tid_t child_tid UNUSED)
 {
   //while(1);
   ///:::
-  printf("%s %d\n", thread_current()->name, thread_current()->tid);
+  //printf("%s %d\n", thread_current()->name, thread_current()->tid);
   struct list_elem * elem;
-  struct thread * req = NULL;
+  struct thread *curr, *parent;
+  struct child * req = NULL;
   for (elem = list_begin(&(thread_current()->children)); elem != list_end(&(thread_current()->children)); elem = list_next(elem))
   {
-    struct thread * t = list_entry(elem, struct thread, child_elem);
-    printf("%d %d\n", t->tid, child_tid);
-    if (t->tid == child_tid)
+    struct child * ch = list_entry(elem, struct child, child_elem);
+    //printf("%d %d\n", ch->tid, child_tid);
+    if (ch->tid == child_tid)
     {
-      req = t;
+      req = ch;
       break;
     }
   }
@@ -121,7 +131,15 @@ process_wait (tid_t child_tid UNUSED)
     return -1;
 
   list_remove(&req->child_elem);
-  sema_down(&req->comp);
+
+  curr = req->child_thread;
+  parent = curr->parent;
+  //printf("process_wait %d %d\n", curr->tid, parent->tid);
+  thread_current()->waiting_for = req->tid;
+
+
+  if (!req->used)
+    sema_down(&parent->comp);
 
   return req->exit_status;
     
@@ -253,7 +271,7 @@ load (const char *file_name, void (**eip) (void), void **esp)
   bool success = false;
   int i;
 
-  //lock_acquire(&file_lock);
+  lock_acquire(&file_lock);
   /* Allocate and activate page directory. */
   t->pagedir = pagedir_create ();
   if (t->pagedir == NULL) 
@@ -360,7 +378,7 @@ load (const char *file_name, void (**eip) (void), void **esp)
   /* We arrive here whether the load is successful or not. */
   file_close (file);
 
-  //lock_release(&file_lock);
+  lock_release(&file_lock);
   return success;
 }
 
