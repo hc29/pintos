@@ -130,7 +130,6 @@ process_wait (tid_t child_tid UNUSED)
   if (!req)
     return -1;
 
-  list_remove(&req->child_elem);
 
   curr = req->child_thread;
   parent = curr->parent;
@@ -142,6 +141,7 @@ process_wait (tid_t child_tid UNUSED)
     sema_down(&parent->comp);
 
   //printf("process_wait2 %d %d\n", curr->tid, parent->tid);
+  list_remove(&req->child_elem);
   return req->exit_status;
     
 }

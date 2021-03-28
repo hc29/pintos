@@ -68,14 +68,14 @@ void sys_exit(int status)
 	struct thread * cur = thread_current();
 	cur->exit_status = status;
 	struct list_elem *elem;
+	printf("sys_exit1 %d\n", cur->parent->tid);
 	for (elem = list_begin(&(cur->parent->children)); elem != list_end(&(cur->parent->children)); elem = list_next(elem))
 	{
 		struct child * ch = list_entry(elem, struct child, child_elem);
-		//printf("process_exit2 %d %d\n", ch->tid, cur->tid);
+		printf("sys_exit2 %d %d\n", ch->tid, cur->tid);
 		if (ch->tid == cur->tid)
 		{
 	  		ch->exit_status = status;
-	  		break;
 		}
 	}
 	printf("%s: exit(%d)\n", thread_current()->name, status);

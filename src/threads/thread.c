@@ -289,7 +289,7 @@ thread_create (const char *name, int priority,
   for (elem = list_begin(&(thread_current()->children)); elem != list_end(&(thread_current()->children)); elem = list_next(elem))
   {
     struct child * t = list_entry(elem, struct child, child_elem);
-    //printf("thread_create %d %d\n", t->tid, thread_current()->tid);
+    printf("thread_create %d %d\n", t->tid, thread_current()->tid);
   }
 
   
