@@ -46,7 +46,7 @@ syscall_handler (struct intr_frame *f UNUSED)
 		case SYS_EXEC:
 		check_address_validity(p+1);
 		check_address_validity(*(p+1));
-		f->eax = sys_exec((const char*)(p+1));
+		f->eax = sys_exec(*(p+1));
 		break;
 
 		case SYS_WAIT:
@@ -65,7 +65,19 @@ syscall_handler (struct intr_frame *f UNUSED)
 ///:::
 void sys_exit(int status)
 {
-	thread_current()->exit_status = status;
+	struct thread * cur = thread_current();
+	cur->exit_status = status;
+	struct list_elem *elem;
+	for (elem = list_begin(&(cur->parent->children)); elem != list_end(&(cur->parent->children)); elem = list_next(elem))
+	{
+		struct child * ch = list_entry(elem, struct child, child_elem);
+		//printf("process_exit2 %d %d\n", ch->tid, cur->tid);
+		if (ch->tid == cur->tid)
+		{
+	  		ch->exit_status = status;
+	  		break;
+		}
+	}
 	printf("%s: exit(%d)\n", thread_current()->name, status);
 	thread_exit();
 }
@@ -91,7 +103,7 @@ pid_t sys_exec(const char *cmdline)
 	lock_acquire(&file_lock);
 	pid = process_execute(cmdcopy);
 	lock_release(&file_lock);
-	printf("sys_exec %d\n", thread_current()->tid);
+	//printf("sys_exec %d\n", thread_current()->tid);
 	sema_down(&thread_current()->sema_exec);
 	return pid;
 }

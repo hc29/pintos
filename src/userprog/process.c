@@ -47,7 +47,7 @@ process_execute (const char *file_name)
   strlcpy (extracted_file_name, file_name, strlen(file_name)+1);
   extracted_file_name = strtok_r(extracted_file_name, " ", &save_ptr);
 
-  printf("process_execute %s\n", extracted_file_name);
+  printf("process_execute %s\n", file_name);
   /* Create a new thread to execute FILE_NAME. */
   tid = thread_create (extracted_file_name, PRI_DEFAULT, start_process, fn_copy);
   //printf("%s\n", extracted_file_name);
@@ -77,14 +77,14 @@ start_process (void *file_name_)
   palloc_free_page (file_name);
   if (!success) 
     thread_exit ();
-  printf("start_process1 %d\n", thread_current()->tid);
+  //printf("start_process1 %d\n", thread_current()->tid);
 
   struct thread * parent;
   parent = thread_current()->parent;
 
   if (parent != NULL)
   {
-    printf("start_process2 %d\n", parent->tid);
+    //printf("start_process2 %d\n", parent->tid);
     sema_up(&parent->sema_exec);
   }
 
@@ -134,13 +134,14 @@ process_wait (tid_t child_tid UNUSED)
 
   curr = req->child_thread;
   parent = curr->parent;
-  //printf("process_wait %d %d\n", curr->tid, parent->tid);
+  //printf("process_wait1 %d %d %d\n", curr->tid, parent->tid, thread_current()->tid);
   thread_current()->waiting_for = req->tid;
 
 
   if (!req->used)
     sema_down(&parent->comp);
 
+  //printf("process_wait2 %d %d\n", curr->tid, parent->tid);
   return req->exit_status;
     
 }
@@ -152,6 +153,22 @@ process_exit (void)
 {
   struct thread *cur = thread_current ();
   uint32_t *pd;
+
+  //printf("process_exit1 %d, %d, %d\n", cur->tid, cur->parent->tid, cur->parent->waiting_for);
+  struct list_elem *elem;
+  for (elem = list_begin(&(cur->parent->children)); elem != list_end(&(cur->parent->children)); elem = list_next(elem))
+  {
+    struct child * ch = list_entry(elem, struct child, child_elem);
+    //printf("process_exit2 %d %d\n", ch->tid, cur->tid);
+    if (ch->tid == cur->tid)
+    {
+      ch->used = true;
+      break;
+    }
+  }
+
+  if (cur->parent->waiting_for == cur->tid)
+    sema_up(&cur->parent->comp);
 
   /* Destroy the current process's page directory and switch back
      to the kernel-only page directory. */

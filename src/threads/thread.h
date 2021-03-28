@@ -172,4 +172,6 @@ void thread_set_nice (int);
 int thread_get_recent_cpu (void);
 int thread_get_load_avg (void);
 
+struct lock file_lock;
+
 #endif /* threads/thread.h */

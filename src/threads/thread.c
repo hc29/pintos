@@ -46,6 +46,7 @@ static struct lock tid_lock;
 
 static fixed_t load_avg;
 
+struct lock file_lock;
 
 /* Stack frame for kernel_thread(). */
 struct kernel_thread_frame 
@@ -69,7 +70,6 @@ static unsigned thread_ticks;   /* # of timer ticks since last yield. */
    Controlled by kernel command-line option "-o mlfqs". */
 bool thread_mlfqs;
 
-struct lock file_lock;
 
 static void kernel_thread (thread_func *, void *aux);
 
@@ -285,12 +285,12 @@ thread_create (const char *name, int priority,
   //printf("Create %d %d\n", ch->child_thread->tid, t->parent->tid);
   list_push_back(&(thread_current()->children), &ch->child_elem);
 
-  //struct list_elem * elem;
-  //for (elem = list_begin(&(thread_current()->children)); elem != list_end(&(thread_current()->children)); elem = list_next(elem))
-  //{
-  //  struct child * t = list_entry(elem, struct child, child_elem);
-  //  printf("thread_create %d %d\n", t->tid, thread_current()->tid);
-  //}
+  struct list_elem * elem;
+  for (elem = list_begin(&(thread_current()->children)); elem != list_end(&(thread_current()->children)); elem = list_next(elem))
+  {
+    struct child * t = list_entry(elem, struct child, child_elem);
+    //printf("thread_create %d %d\n", t->tid, thread_current()->tid);
+  }
 
   
   /* Prepare thread for first run by initializing its stack.
@@ -415,8 +415,6 @@ thread_exit (void)
 {
   ASSERT (!intr_context ());
 
-  if (thread_current()->parent->waiting_for == thread_current()->tid)
-    sema_up(&thread_current()->parent->comp);
 
 #ifdef USERPROG
   process_exit ();
