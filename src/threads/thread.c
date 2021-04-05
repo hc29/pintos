@@ -285,12 +285,12 @@ thread_create (const char *name, int priority,
   //printf("Create %d %d\n", ch->child_thread->tid, t->parent->tid);
   list_push_back(&(thread_current()->children), &ch->child_elem);
 
-  struct list_elem * elem;
+  /*struct list_elem * elem;
   for (elem = list_begin(&(thread_current()->children)); elem != list_end(&(thread_current()->children)); elem = list_next(elem))
   {
     struct child * t = list_entry(elem, struct child, child_elem);
     printf("thread_create %d %d\n", t->tid, thread_current()->tid);
-  }
+  }*/
 
   
   /* Prepare thread for first run by initializing its stack.

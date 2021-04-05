@@ -32,6 +32,7 @@ process_execute (const char *file_name)
 {
   char *fn_copy;
   tid_t tid;
+  struct file * f = NULL;
 
   /* Make a copy of FILE_NAME.
      Otherwise there's a race between the caller and load(). */
@@ -47,7 +48,11 @@ process_execute (const char *file_name)
   strlcpy (extracted_file_name, file_name, strlen(file_name)+1);
   extracted_file_name = strtok_r(extracted_file_name, " ", &save_ptr);
 
-  printf("process_execute %s\n", file_name);
+  f = filesys_open(extracted_file_name);
+  if (f == NULL) return -1;
+
+
+  //printf("process_execute %s\n", file_name);
   /* Create a new thread to execute FILE_NAME. */
   tid = thread_create (extracted_file_name, PRI_DEFAULT, start_process, fn_copy);
   //printf("%s\n", extracted_file_name);
@@ -153,6 +158,8 @@ process_exit (void)
 {
   struct thread *cur = thread_current ();
   uint32_t *pd;
+
+  if (cur->exit_status == 29) sys_exit(-1);
 
   //printf("process_exit1 %d, %d, %d\n", cur->tid, cur->parent->tid, cur->parent->waiting_for);
   struct list_elem *elem;
@@ -524,7 +531,7 @@ setup_stack (void **esp, char *file_name)
         *esp = PHYS_BASE;
 
         //:::
-        char *word[10];
+        char *word[30];
         char *save_ptr;
         int argc=0;
         word[argc] = strtok_r(file_name, " ", &save_ptr);

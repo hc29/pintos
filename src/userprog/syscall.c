@@ -68,11 +68,11 @@ void sys_exit(int status)
 	struct thread * cur = thread_current();
 	cur->exit_status = status;
 	struct list_elem *elem;
-	printf("sys_exit1 %d\n", cur->parent->tid);
+	//printf("sys_exit1 %d\n", cur->parent->tid);
 	for (elem = list_begin(&(cur->parent->children)); elem != list_end(&(cur->parent->children)); elem = list_next(elem))
 	{
 		struct child * ch = list_entry(elem, struct child, child_elem);
-		printf("sys_exit2 %d %d\n", ch->tid, cur->tid);
+		//printf("sys_exit2 %d %d\n", ch->tid, cur->tid);
 		if (ch->tid == cur->tid)
 		{
 	  		ch->exit_status = status;
@@ -98,13 +98,30 @@ void sys_write(int fd, const void* buffer, unsigned size)
 ///:::
 pid_t sys_exec(const char *cmdline)
 {
+	//printf("sys_exec %s\n", cmdline);
 	pid_t pid;
-	char *cmdcopy = cmdline;
+	char *file_name = cmdline;
 	lock_acquire(&file_lock);
-	pid = process_execute(cmdcopy);
-	lock_release(&file_lock);
+
+	char *save_ptr;
+	char *extracted_file_name;
+	extracted_file_name = (char *) malloc(strlen(file_name)+1);
+	strlcpy (extracted_file_name, file_name, strlen(file_name)+1);
+	extracted_file_name = strtok_r(extracted_file_name, " ", &save_ptr);
+	struct file * f = filesys_open(extracted_file_name);
+	if (f == NULL) 
+	{
+		pid = -1;
+		lock_release(&file_lock);
+	}
+	else 
+	{
+		file_close(f);
+		pid = process_execute(file_name);
+		lock_release(&file_lock);
+		sema_down(&thread_current()->sema_exec);
+	}
 	//printf("sys_exec %d\n", thread_current()->tid);
-	sema_down(&thread_current()->sema_exec);
 	return pid;
 }
 
