@@ -118,6 +118,11 @@ struct thread
 
     int exit_status;
 
+    ///:::
+    struct list file_list;
+
+    int file_count;
+
 
 #ifdef USERPROG
     /* Owned by userprog/process.c. */
@@ -136,6 +141,15 @@ struct child
   int exit_status;
   bool used;
 };
+
+struct file_info
+{
+  struct file * f;
+  int fd;
+  struct list_elem file_elem;
+};
+
+
 /* If false (default), use round-robin scheduler.
    If true, use multi-level feedback queue scheduler.
    Controlled by kernel command-line option "-o mlfqs". */

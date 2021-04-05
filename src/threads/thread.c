@@ -618,6 +618,9 @@ init_thread (struct thread *t, const char *name, int priority)
   sema_init(&t->comp, 0);
   sema_init(&t->sema_exec, 0);
   t->exit_status = 29;
+  ///:::
+  list_init(&t->file_list);
+  t->file_count = 2;
   list_push_back (&all_list, &t->allelem);
 }
 

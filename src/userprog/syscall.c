@@ -12,6 +12,9 @@ void sys_exit(int status);
 void sys_write(int fd, const void* buffer, unsigned size);
 pid_t sys_exec(const char *cmdline);
 int sys_wait(pid_t pid);
+bool sys_create(const char *file, unsigned initial_size);
+bool sys_remove(const char* file);
+int sys_open(const char* file);
 void check_address_validity(const void* vaddr);
 
 void
@@ -52,6 +55,25 @@ syscall_handler (struct intr_frame *f UNUSED)
 		case SYS_WAIT:
 		check_address_validity(p+1);
 		f->eax = sys_wait((pid_t) *(p+1));
+		break;
+
+		case SYS_CREATE:
+		check_address_validity(p+1);
+		check_address_validity(p+2);
+		check_address_validity(*(p+1));
+		f->eax = sys_create(*(p+1), *(p+2));
+		break;
+
+		case SYS_REMOVE:
+		check_address_validity(p+1);
+		check_address_validity(*(p+1));
+		f->eax = sys_remove(*(p+1));
+		break;
+
+		case SYS_OPEN:
+		check_address_validity(p+1);
+		check_address_validity(*(p+1));
+		f->eax = sys_open(*(p+1));
 		break;
 
 		default:
@@ -129,6 +151,57 @@ pid_t sys_exec(const char *cmdline)
 int sys_wait(pid_t pid)
 {
 	return process_wait(pid);
+}
+
+
+///:::
+bool sys_create(const char *file, unsigned initial_size)
+{
+	if (file == NULL)
+	{
+		sys_exit(-1);
+	}
+	bool ret;
+	lock_acquire(&file_lock);
+	ret = filesys_create(file, initial_size);
+	lock_release(&file_lock);
+	return ret;
+}
+
+
+///:::
+bool sys_remove(const char* file)
+{
+	bool ret;
+	lock_acquire(&file_lock);
+	ret = filesys_remove(file);
+	lock_release(&file_lock);
+	return ret;
+}
+
+
+///:::
+int sys_open(const char* file)
+{
+	struct thread * cur = thread_current();
+	struct file * f;
+	lock_acquire(&file_lock);
+	f = filesys_open(file);
+	
+	if (file == NULL)
+	{
+		lock_release(&file_lock);
+		return -1;
+	}
+
+	struct file_info * fi;
+	fi->f = f;
+	fi->fd = cur->file_count;
+	cur->file_count++;
+	list_push_back(&cur->file_list, &fi->file_elem);
+	lock_release(&file_lock);
+
+	return fi->fd;
 }
 
 
