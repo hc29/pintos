@@ -76,6 +76,19 @@ syscall_handler (struct intr_frame *f UNUSED)
 		f->eax = sys_open(*(p+1));
 		break;
 
+		case SYS_FILESIZE:
+		check_address_validity(p+1);
+		f->eax = sys_filesize(*(p+1));
+		break;
+
+		case SYS_READ:
+		check_address_validity(p+5);
+		check_address_validity(p+6);
+		check_address_validity(*(p+6));
+		check_address_validity(p+7);
+		f->eax = sys_read(*(p+5), *(p+6), *(p+7));
+		break;
+
 		default:
 		printf("System call not implemented yet %d\n", *p);
 
@@ -113,7 +126,22 @@ void sys_write(int fd, const void* buffer, unsigned size)
 	}
 	else
 	{
-		printf("Not supposed to print anywhere else for now\n");
+		int ret=0;
+		struct thread * cur = thread_current();
+		lock_acquire(&file_lock);
+		struct list_elem * elem;
+		for (elem = list_begin(&(cur->file_list)); elem != list_end(&(cur->file_list)); elem = list_next(elem))
+		{
+			struct file_info * fi = list_entry(elem, struct file_info, file_elem);
+			if (fi->fd == fd)
+			{
+		  		ret = file_write(fi->f, buffer, size);
+			}
+		}
+		lock_release(&file_lock);
+
+		return ret;
+
 	}
 }
 
@@ -183,25 +211,75 @@ bool sys_remove(const char* file)
 ///:::
 int sys_open(const char* file)
 {
-	struct thread * cur = thread_current();
 	struct file * f;
 	lock_acquire(&file_lock);
 	f = filesys_open(file);
 	
-	if (file == NULL)
+	if (f == NULL)
 	{
 		lock_release(&file_lock);
 		return -1;
 	}
 
 	struct file_info * fi;
+	fi = malloc(sizeof(file_info));
 	fi->f = f;
-	fi->fd = cur->file_count;
-	cur->file_count++;
-	list_push_back(&cur->file_list, &fi->file_elem);
+	fi->fd = thread_current()->file_count;
+	thread_current()->file_count++;
+	list_push_back(&thread_current()->file_list, &fi->file_elem);
 	lock_release(&file_lock);
 
 	return fi->fd;
+}
+
+///:::
+int sys_filesize(int fd)
+{
+	int ret;
+	struct thread * cur = thread_current();
+	lock_acquire(&file_lock);
+	struct list_elem * elem;
+	for (elem = list_begin(&(cur->file_list)); elem != list_end(&(cur->file_list)); elem = list_next(elem))
+	{
+		struct file_info * fi = list_entry(elem, struct file_info, file_elem);
+		if (fi->fd == fd)
+		{
+	  		ret = file_length(fi->f);
+		}
+	}
+	lock_release(&file_lock);
+
+	return ret;
+}
+
+
+///:::
+int sys_read(int fd, void *buffer, unsigned size)
+{
+	if (fd == 0)
+	{
+		for (i=0; i<size; i++)
+			buffer[i] = input_getc();
+		return size;
+	}
+	else
+	{
+		int ret=-1;
+		struct thread * cur = thread_current();
+		lock_acquire(&file_lock);
+		struct list_elem * elem;
+		for (elem = list_begin(&(cur->file_list)); elem != list_end(&(cur->file_list)); elem = list_next(elem))
+		{
+			struct file_info * fi = list_entry(elem, struct file_info, file_elem);
+			if (fi->fd == fd)
+			{
+		  		ret = file_read(fi->f, buffer, size);
+			}
+		}
+		lock_release(&file_lock);
+
+		return ret;
+	}
 }
 
 
