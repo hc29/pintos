@@ -174,6 +174,14 @@ process_exit (void)
     }
   }
 
+  while(!list_empty(&cur->file_list))
+  {
+    elem = list_pop_front(&cur->file_list);
+    struct file_info * fi = list_entry(elem, struct file_info, file_elem);
+
+    file_close(fi->f);
+  }
+
   if (cur->parent->waiting_for == cur->tid)
     sema_up(&cur->parent->comp);
 

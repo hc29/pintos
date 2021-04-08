@@ -6,6 +6,8 @@
 #include "threads/vaddr.h"
 #include "userprog/pagedir.h"
 #include "userprog/process.h"
+#include "filesys/file.h"
+#include "devices/input.h"
 
 static void syscall_handler (struct intr_frame *);
 void sys_exit(int status);
@@ -15,6 +17,9 @@ int sys_wait(pid_t pid);
 bool sys_create(const char *file, unsigned initial_size);
 bool sys_remove(const char* file);
 int sys_open(const char* file);
+int sys_filesize(int fd);
+int sys_read(int fd, void *buffer, unsigned size);
+void sys_close(int fd);
 void check_address_validity(const void* vaddr);
 
 void
@@ -58,10 +63,10 @@ syscall_handler (struct intr_frame *f UNUSED)
 		break;
 
 		case SYS_CREATE:
-		check_address_validity(p+1);
-		check_address_validity(p+2);
-		check_address_validity(*(p+1));
-		f->eax = sys_create(*(p+1), *(p+2));
+		check_address_validity(p+4);
+		check_address_validity(p+5);
+		check_address_validity(*(p+4));
+		f->eax = sys_create(*(p+4), *(p+5));
 		break;
 
 		case SYS_REMOVE:
@@ -87,6 +92,11 @@ syscall_handler (struct intr_frame *f UNUSED)
 		check_address_validity(*(p+6));
 		check_address_validity(p+7);
 		f->eax = sys_read(*(p+5), *(p+6), *(p+7));
+		break;
+
+		case SYS_CLOSE:
+		check_address_validity(p+1);
+		sys_close(*(p+1));
 		break;
 
 		default:
@@ -187,7 +197,7 @@ bool sys_create(const char *file, unsigned initial_size)
 {
 	if (file == NULL)
 	{
-		sys_exit(-1);
+		return false;
 	}
 	bool ret;
 	lock_acquire(&file_lock);
@@ -222,7 +232,7 @@ int sys_open(const char* file)
 	}
 
 	struct file_info * fi;
-	fi = malloc(sizeof(file_info));
+	fi = malloc(sizeof(struct file_info));
 	fi->f = f;
 	fi->fd = thread_current()->file_count;
 	thread_current()->file_count++;
@@ -258,8 +268,10 @@ int sys_read(int fd, void *buffer, unsigned size)
 {
 	if (fd == 0)
 	{
+		uint8_t * buf = buffer;
+		int i;
 		for (i=0; i<size; i++)
-			buffer[i] = input_getc();
+			buf[i] = input_getc();
 		return size;
 	}
 	else
@@ -280,6 +292,26 @@ int sys_read(int fd, void *buffer, unsigned size)
 
 		return ret;
 	}
+}
+
+
+///:::
+void sys_close(int fd)
+{
+	struct thread * cur = thread_current();
+	lock_acquire(&file_lock);
+	struct list_elem * elem;
+	for (elem = list_begin(&(cur->file_list)); elem != list_end(&(cur->file_list)); elem = list_next(elem))
+	{
+		struct file_info * fi = list_entry(elem, struct file_info, file_elem);
+		if (fi->fd == fd)
+		{
+			file_close(fi->f);
+			list_remove(elem);
+			break;
+		}
+	}
+	lock_release(&file_lock);
 }
 
 

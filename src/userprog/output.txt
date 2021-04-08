@@ -1,5 +1,133 @@
 cd build && make check
 make[1]: Entering directory `/home/osboxes/pintos/src/userprog/build'
+gcc -m32 -c ../../userprog/syscall.c -o userprog/syscall.o -g -msoft-float -O -fno-stack-protector -nostdinc -I../.. -I../../lib -I../../lib/kernel -Wall -W -Wstrict-prototypes -Wmissing-prototypes -Wsystem-headers -DUSERPROG -DFILESYS -MMD -MF userprog/syscall.d
+../../userprog/syscall.c: In function ‘syscall_handler’:
+../../userprog/syscall.c:48:3: warning: passing argument 1 of ‘check_address_validity’ makes pointer from integer without a cast [enabled by default]
+   check_address_validity(*(p+6));
+   ^
+../../userprog/syscall.c:23:6: note: expected ‘const void *’ but argument is of type ‘int’
+ void check_address_validity(const void* vaddr);
+      ^
+../../userprog/syscall.c:56:3: warning: passing argument 1 of ‘check_address_validity’ makes pointer from integer without a cast [enabled by default]
+   check_address_validity(*(p+1));
+   ^
+../../userprog/syscall.c:23:6: note: expected ‘const void *’ but argument is of type ‘int’
+ void check_address_validity(const void* vaddr);
+      ^
+../../userprog/syscall.c:57:3: warning: passing argument 1 of ‘sys_exec’ makes pointer from integer without a cast [enabled by default]
+   f->eax = sys_exec(*(p+1));
+   ^
+../../userprog/syscall.c:15:7: note: expected ‘const char *’ but argument is of type ‘int’
+ pid_t sys_exec(const char *cmdline);
+       ^
+../../userprog/syscall.c:68:3: warning: passing argument 1 of ‘check_address_validity’ makes pointer from integer without a cast [enabled by default]
+   check_address_validity(*(p+4));
+   ^
+../../userprog/syscall.c:23:6: note: expected ‘const void *’ but argument is of type ‘int’
+ void check_address_validity(const void* vaddr);
+      ^
+../../userprog/syscall.c:69:3: warning: passing argument 1 of ‘sys_create’ makes pointer from integer without a cast [enabled by default]
+   f->eax = sys_create(*(p+4), *(p+5));
+   ^
+../../userprog/syscall.c:17:6: note: expected ‘const char *’ but argument is of type ‘int’
+ bool sys_create(const char *file, unsigned initial_size);
+      ^
+../../userprog/syscall.c:74:3: warning: passing argument 1 of ‘check_address_validity’ makes pointer from integer without a cast [enabled by default]
+   check_address_validity(*(p+1));
+   ^
+../../userprog/syscall.c:23:6: note: expected ‘const void *’ but argument is of type ‘int’
+ void check_address_validity(const void* vaddr);
+      ^
+../../userprog/syscall.c:75:3: warning: passing argument 1 of ‘sys_remove’ makes pointer from integer without a cast [enabled by default]
+   f->eax = sys_remove(*(p+1));
+   ^
+../../userprog/syscall.c:18:6: note: expected ‘const char *’ but argument is of type ‘int’
+ bool sys_remove(const char* file);
+      ^
+../../userprog/syscall.c:80:3: warning: passing argument 1 of ‘check_address_validity’ makes pointer from integer without a cast [enabled by default]
+   check_address_validity(*(p+1));
+   ^
+../../userprog/syscall.c:23:6: note: expected ‘const void *’ but argument is of type ‘int’
+ void check_address_validity(const void* vaddr);
+      ^
+../../userprog/syscall.c:81:3: warning: passing argument 1 of ‘sys_open’ makes pointer from integer without a cast [enabled by default]
+   f->eax = sys_open(*(p+1));
+   ^
+../../userprog/syscall.c:19:5: note: expected ‘const char *’ but argument is of type ‘int’
+ int sys_open(const char* file);
+     ^
+../../userprog/syscall.c:92:3: warning: passing argument 1 of ‘check_address_validity’ makes pointer from integer without a cast [enabled by default]
+   check_address_validity(*(p+6));
+   ^
+../../userprog/syscall.c:23:6: note: expected ‘const void *’ but argument is of type ‘int’
+ void check_address_validity(const void* vaddr);
+      ^
+../../userprog/syscall.c:94:3: warning: passing argument 2 of ‘sys_read’ makes pointer from integer without a cast [enabled by default]
+   f->eax = sys_read(*(p+5), *(p+6), *(p+7));
+   ^
+../../userprog/syscall.c:21:5: note: expected ‘void *’ but argument is of type ‘int’
+ int sys_read(int fd, void *buffer, unsigned size);
+     ^
+../../userprog/syscall.c: In function ‘sys_write’:
+../../userprog/syscall.c:153:3: warning: ‘return’ with a value, in function returning void [enabled by default]
+   return ret;
+   ^
+../../userprog/syscall.c: In function ‘sys_exec’:
+../../userprog/syscall.c:163:20: warning: initialization discards ‘const’ qualifier from pointer target type [enabled by default]
+  char *file_name = cmdline;
+                    ^
+../../userprog/syscall.c:168:2: warning: implicit declaration of function ‘malloc’ [-Wimplicit-function-declaration]
+  extracted_file_name = (char *) malloc(strlen(file_name)+1);
+  ^
+../../userprog/syscall.c:168:33: warning: incompatible implicit declaration of built-in function ‘malloc’ [enabled by default]
+  extracted_file_name = (char *) malloc(strlen(file_name)+1);
+                                 ^
+../../userprog/syscall.c:168:2: warning: implicit declaration of function ‘strlen’ [-Wimplicit-function-declaration]
+  extracted_file_name = (char *) malloc(strlen(file_name)+1);
+  ^
+../../userprog/syscall.c:168:40: warning: incompatible implicit declaration of built-in function ‘strlen’ [enabled by default]
+  extracted_file_name = (char *) malloc(strlen(file_name)+1);
+                                        ^
+../../userprog/syscall.c:169:2: warning: implicit declaration of function ‘strlcpy’ [-Wimplicit-function-declaration]
+  strlcpy (extracted_file_name, file_name, strlen(file_name)+1);
+  ^
+../../userprog/syscall.c:170:2: warning: implicit declaration of function ‘strtok_r’ [-Wimplicit-function-declaration]
+  extracted_file_name = strtok_r(extracted_file_name, " ", &save_ptr);
+  ^
+../../userprog/syscall.c:170:22: warning: assignment makes pointer from integer without a cast [enabled by default]
+  extracted_file_name = strtok_r(extracted_file_name, " ", &save_ptr);
+                      ^
+../../userprog/syscall.c:171:9: warning: implicit declaration of function ‘filesys_open’ [-Wimplicit-function-declaration]
+  struct file * f = filesys_open(extracted_file_name);
+         ^
+../../userprog/syscall.c:171:20: warning: initialization makes pointer from integer without a cast [enabled by default]
+  struct file * f = filesys_open(extracted_file_name);
+                    ^
+../../userprog/syscall.c: In function ‘sys_create’:
+../../userprog/syscall.c:204:2: warning: implicit declaration of function ‘filesys_create’ [-Wimplicit-function-declaration]
+  ret = filesys_create(file, initial_size);
+  ^
+../../userprog/syscall.c: In function ‘sys_remove’:
+../../userprog/syscall.c:215:2: warning: implicit declaration of function ‘filesys_remove’ [-Wimplicit-function-declaration]
+  ret = filesys_remove(file);
+  ^
+../../userprog/syscall.c: In function ‘sys_open’:
+../../userprog/syscall.c:226:4: warning: assignment makes pointer from integer without a cast [enabled by default]
+  f = filesys_open(file);
+    ^
+../../userprog/syscall.c:235:7: warning: incompatible implicit declaration of built-in function ‘malloc’ [enabled by default]
+  fi = malloc(sizeof(struct file_info));
+       ^
+../../userprog/syscall.c: In function ‘sys_read’:
+../../userprog/syscall.c:273:14: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+   for (i=0; i<size; i++)
+              ^
+../../userprog/syscall.c: In function ‘sys_filesize’:
+../../userprog/syscall.c:262:2: warning: ‘ret’ may be used uninitialized in this function [-Wmaybe-uninitialized]
+  return ret;
+  ^
+ld -melf_i386 -T threads/kernel.lds.s -o kernel.o threads/start.o threads/init.o threads/thread.o threads/switch.o threads/interrupt.o threads/intr-stubs.o threads/synch.o threads/palloc.o threads/malloc.o devices/pit.o devices/timer.o devices/kbd.o devices/vga.o devices/serial.o devices/block.o devices/partition.o devices/ide.o devices/input.o devices/intq.o devices/rtc.o devices/shutdown.o devices/speaker.o lib/debug.o lib/random.o lib/stdio.o lib/stdlib.o lib/string.o lib/arithmetic.o lib/ustar.o lib/kernel/debug.o lib/kernel/list.o lib/kernel/bitmap.o lib/kernel/hash.o lib/kernel/console.o userprog/process.o userprog/pagedir.o userprog/exception.o userprog/syscall.o userprog/gdt.o userprog/tss.o filesys/filesys.o filesys/free-map.o filesys/file.o filesys/directory.o filesys/inode.o filesys/fsutil.o
+objcopy -R .note -R .comment -S kernel.o kernel.bin
 pintos -v -k -T 60 --qemu  --filesys-size=2 -p tests/userprog/args-none -a args-none -- -q  -f run args-none < /dev/null 2> tests/userprog/args-none.errors > tests/userprog/args-none.output
 perl -I../.. ../../tests/userprog/args-none.ck tests/userprog/args-none tests/userprog/args-none.result
 pass tests/userprog/args-none
@@ -41,111 +169,31 @@ perl -I../.. ../../tests/userprog/create-empty.ck tests/userprog/create-empty te
 pass tests/userprog/create-empty
 pintos -v -k -T 60 --qemu  --filesys-size=2 -p tests/userprog/create-null -a create-null -- -q  -f run create-null < /dev/null 2> tests/userprog/create-null.errors > tests/userprog/create-null.output
 perl -I../.. ../../tests/userprog/create-null.ck tests/userprog/create-null tests/userprog/create-null.result
-FAIL tests/userprog/create-null
-Test output failed to match any acceptable form.
-
-Acceptable output:
-  (create-null) begin
-  create-null: exit(-1)
-Differences in `diff -u' format:
-  (create-null) begin
-- create-null: exit(-1)
-+ (create-null) create(NULL): 0
-+ (create-null) end
-+ create-null: exit(0)
+pass tests/userprog/create-null
 pintos -v -k -T 60 --qemu  --filesys-size=2 -p tests/userprog/create-bad-ptr -a create-bad-ptr -- -q  -f run create-bad-ptr < /dev/null 2> tests/userprog/create-bad-ptr.errors > tests/userprog/create-bad-ptr.output
 perl -I../.. ../../tests/userprog/create-bad-ptr.ck tests/userprog/create-bad-ptr tests/userprog/create-bad-ptr.result
-FAIL tests/userprog/create-bad-ptr
-Test output failed to match any acceptable form.
-
-Acceptable output:
-  (create-bad-ptr) begin
-  create-bad-ptr: exit(-1)
-Differences in `diff -u' format:
-  (create-bad-ptr) begin
-- create-bad-ptr: exit(-1)
-+ (create-bad-ptr) create(0x20101234): 0
-+ (create-bad-ptr) end
-+ create-bad-ptr: exit(0)
+pass tests/userprog/create-bad-ptr
 pintos -v -k -T 60 --qemu  --filesys-size=2 -p tests/userprog/create-long -a create-long -- -q  -f run create-long < /dev/null 2> tests/userprog/create-long.errors > tests/userprog/create-long.output
 perl -I../.. ../../tests/userprog/create-long.ck tests/userprog/create-long tests/userprog/create-long.result
 pass tests/userprog/create-long
 pintos -v -k -T 60 --qemu  --filesys-size=2 -p tests/userprog/create-exists -a create-exists -- -q  -f run create-exists < /dev/null 2> tests/userprog/create-exists.errors > tests/userprog/create-exists.output
 perl -I../.. ../../tests/userprog/create-exists.ck tests/userprog/create-exists tests/userprog/create-exists.result
-FAIL tests/userprog/create-exists
-run: try to re-create quux.dat: FAILED
+pass tests/userprog/create-exists
 pintos -v -k -T 60 --qemu  --filesys-size=2 -p tests/userprog/create-bound -a create-bound -- -q  -f run create-bound < /dev/null 2> tests/userprog/create-bound.errors > tests/userprog/create-bound.output
 perl -I../.. ../../tests/userprog/create-bound.ck tests/userprog/create-bound tests/userprog/create-bound.result
-FAIL tests/userprog/create-bound
-Test output failed to match any acceptable form.
-
-Acceptable output:
-  (create-bound) begin
-  (create-bound) create("quux.dat"): 1
-  (create-bound) end
-  create-bound: exit(0)
-Differences in `diff -u' format:
-  (create-bound) begin
-- (create-bound) create("quux.dat"): 1
-+ (create-bound) create("quux.dat"): 0
-  (create-bound) end
-  create-bound: exit(0)
+pass tests/userprog/create-bound
 pintos -v -k -T 60 --qemu  --filesys-size=2 -p tests/userprog/open-normal -a open-normal -p ../../tests/userprog/sample.txt -a sample.txt -- -q  -f run open-normal < /dev/null 2> tests/userprog/open-normal.errors > tests/userprog/open-normal.output
 perl -I../.. ../../tests/userprog/open-normal.ck tests/userprog/open-normal tests/userprog/open-normal.result
-FAIL tests/userprog/open-normal
-Kernel panic in run: PANIC at ../../userprog/exception.c:100 in kill(): Kernel bug - unexpected interrupt in kernel
-Call stack: 0xc002871e 0xc0028b98 0x804a1ed
-Translation of call stack:
-In kernel.o:
-0xc002871e: debug_panic (.../../lib/kernel/debug.c:38)
-0xc0028b98: list_insert (.../../lib/kernel/list.c:174)
-In tests/userprog/open-normal:
-0x0804a1ed: open (...../lib/user/syscall.c:105)
-Translations of user virtual addresses above are based on a guess at
-the binary to use.  If this guess is incorrect, then those
-translations will be misleading.
+pass tests/userprog/open-normal
 pintos -v -k -T 60 --qemu  --filesys-size=2 -p tests/userprog/open-missing -a open-missing -- -q  -f run open-missing < /dev/null 2> tests/userprog/open-missing.errors > tests/userprog/open-missing.output
 perl -I../.. ../../tests/userprog/open-missing.ck tests/userprog/open-missing tests/userprog/open-missing.result
-FAIL tests/userprog/open-missing
-Kernel panic in run: PANIC at ../../userprog/exception.c:100 in kill(): Kernel bug - unexpected interrupt in kernel
-Call stack: 0xc002871e 0xc0028b98 0x804a1ed
-Translation of call stack:
-In kernel.o:
-0xc002871e: debug_panic (.../../lib/kernel/debug.c:38)
-0xc0028b98: list_insert (.../../lib/kernel/list.c:174)
-In tests/userprog/open-missing:
-0x0804a1ed: open (...../lib/user/syscall.c:105)
-Translations of user virtual addresses above are based on a guess at
-the binary to use.  If this guess is incorrect, then those
-translations will be misleading.
+pass tests/userprog/open-missing
 pintos -v -k -T 60 --qemu  --filesys-size=2 -p tests/userprog/open-boundary -a open-boundary -p ../../tests/userprog/sample.txt -a sample.txt -- -q  -f run open-boundary < /dev/null 2> tests/userprog/open-boundary.errors > tests/userprog/open-boundary.output
 perl -I../.. ../../tests/userprog/open-boundary.ck tests/userprog/open-boundary tests/userprog/open-boundary.result
-FAIL tests/userprog/open-boundary
-Kernel panic in run: PANIC at ../../userprog/exception.c:100 in kill(): Kernel bug - unexpected interrupt in kernel
-Call stack: 0xc002871e 0xc0028b98 0x804a29d
-Translation of call stack:
-In kernel.o:
-0xc002871e: debug_panic (.../../lib/kernel/debug.c:38)
-0xc0028b98: list_insert (.../../lib/kernel/list.c:174)
-In tests/userprog/open-boundary:
-0x0804a29d: open (...../lib/user/syscall.c:105)
-Translations of user virtual addresses above are based on a guess at
-the binary to use.  If this guess is incorrect, then those
-translations will be misleading.
+pass tests/userprog/open-boundary
 pintos -v -k -T 60 --qemu  --filesys-size=2 -p tests/userprog/open-empty -a open-empty -- -q  -f run open-empty < /dev/null 2> tests/userprog/open-empty.errors > tests/userprog/open-empty.output
 perl -I../.. ../../tests/userprog/open-empty.ck tests/userprog/open-empty tests/userprog/open-empty.result
-FAIL tests/userprog/open-empty
-Kernel panic in run: PANIC at ../../userprog/exception.c:100 in kill(): Kernel bug - unexpected interrupt in kernel
-Call stack: 0xc002871e 0xc0028b98 0x804a1ed
-Translation of call stack:
-In kernel.o:
-0xc002871e: debug_panic (.../../lib/kernel/debug.c:38)
-0xc0028b98: list_insert (.../../lib/kernel/list.c:174)
-In tests/userprog/open-empty:
-0x0804a1ed: open (...../lib/user/syscall.c:105)
-Translations of user virtual addresses above are based on a guess at
-the binary to use.  If this guess is incorrect, then those
-translations will be misleading.
+pass tests/userprog/open-empty
 pintos -v -k -T 60 --qemu  --filesys-size=2 -p tests/userprog/open-null -a open-null -- -q  -f run open-null < /dev/null 2> tests/userprog/open-null.errors > tests/userprog/open-null.output
 perl -I../.. ../../tests/userprog/open-null.ck tests/userprog/open-null tests/userprog/open-null.result
 pass tests/userprog/open-null
@@ -154,343 +202,58 @@ perl -I../.. ../../tests/userprog/open-bad-ptr.ck tests/userprog/open-bad-ptr te
 pass tests/userprog/open-bad-ptr
 pintos -v -k -T 60 --qemu  --filesys-size=2 -p tests/userprog/open-twice -a open-twice -p ../../tests/userprog/sample.txt -a sample.txt -- -q  -f run open-twice < /dev/null 2> tests/userprog/open-twice.errors > tests/userprog/open-twice.output
 perl -I../.. ../../tests/userprog/open-twice.ck tests/userprog/open-twice tests/userprog/open-twice.result
-FAIL tests/userprog/open-twice
-Kernel panic in run: PANIC at ../../userprog/exception.c:100 in kill(): Kernel bug - unexpected interrupt in kernel
-Call stack: 0xc002871e 0xc0028b98 0x804a24d
-Translation of call stack:
-In kernel.o:
-0xc002871e: debug_panic (.../../lib/kernel/debug.c:38)
-0xc0028b98: list_insert (.../../lib/kernel/list.c:174)
-In tests/userprog/open-twice:
-0x0804a24d: open (...../lib/user/syscall.c:105)
-Translations of user virtual addresses above are based on a guess at
-the binary to use.  If this guess is incorrect, then those
-translations will be misleading.
+pass tests/userprog/open-twice
 pintos -v -k -T 60 --qemu  --filesys-size=2 -p tests/userprog/close-normal -a close-normal -p ../../tests/userprog/sample.txt -a sample.txt -- -q  -f run close-normal < /dev/null 2> tests/userprog/close-normal.errors > tests/userprog/close-normal.output
 perl -I../.. ../../tests/userprog/close-normal.ck tests/userprog/close-normal tests/userprog/close-normal.result
-FAIL tests/userprog/close-normal
-Kernel panic in run: PANIC at ../../userprog/exception.c:100 in kill(): Kernel bug - unexpected interrupt in kernel
-Call stack: 0xc002871e 0xc0028b98 0x804a20d
-Translation of call stack:
-In kernel.o:
-0xc002871e: debug_panic (.../../lib/kernel/debug.c:38)
-0xc0028b98: list_insert (.../../lib/kernel/list.c:174)
-In tests/userprog/close-normal:
-0x0804a20d: open (...../lib/user/syscall.c:105)
-Translations of user virtual addresses above are based on a guess at
-the binary to use.  If this guess is incorrect, then those
-translations will be misleading.
+pass tests/userprog/close-normal
 pintos -v -k -T 60 --qemu  --filesys-size=2 -p tests/userprog/close-twice -a close-twice -p ../../tests/userprog/sample.txt -a sample.txt -- -q  -f run close-twice < /dev/null 2> tests/userprog/close-twice.errors > tests/userprog/close-twice.output
 perl -I../.. ../../tests/userprog/close-twice.ck tests/userprog/close-twice tests/userprog/close-twice.result
-FAIL tests/userprog/close-twice
-Kernel panic in run: PANIC at ../../userprog/exception.c:100 in kill(): Kernel bug - unexpected interrupt in kernel
-Call stack: 0xc002871e 0xc0028b98 0x804a21d
-Translation of call stack:
-In kernel.o:
-0xc002871e: debug_panic (.../../lib/kernel/debug.c:38)
-0xc0028b98: list_insert (.../../lib/kernel/list.c:174)
-In tests/userprog/close-twice:
-0x0804a21d: open (...../lib/user/syscall.c:105)
-Translations of user virtual addresses above are based on a guess at
-the binary to use.  If this guess is incorrect, then those
-translations will be misleading.
+pass tests/userprog/close-twice
 pintos -v -k -T 60 --qemu  --filesys-size=2 -p tests/userprog/close-stdin -a close-stdin -- -q  -f run close-stdin < /dev/null 2> tests/userprog/close-stdin.errors > tests/userprog/close-stdin.output
 perl -I../.. ../../tests/userprog/close-stdin.ck tests/userprog/close-stdin tests/userprog/close-stdin.result
-FAIL tests/userprog/close-stdin
-Test output failed to match any acceptable form.
-
-Acceptable output:
-  (close-stdin) begin
-  (close-stdin) end
-  close-stdin: exit(0)
-Differences in `diff -u' format:
-  (close-stdin) begin
-+ System call not implemented yet 12
-  (close-stdin) end
-  close-stdin: exit(0)
-Acceptable output:
-  (close-stdin) begin
-  close-stdin: exit(-1)
-Differences in `diff -u' format:
-  (close-stdin) begin
-- close-stdin: exit(-1)
-+ System call not implemented yet 12
-+ (close-stdin) end
-+ close-stdin: exit(0)
+pass tests/userprog/close-stdin
 pintos -v -k -T 60 --qemu  --filesys-size=2 -p tests/userprog/close-stdout -a close-stdout -- -q  -f run close-stdout < /dev/null 2> tests/userprog/close-stdout.errors > tests/userprog/close-stdout.output
 perl -I../.. ../../tests/userprog/close-stdout.ck tests/userprog/close-stdout tests/userprog/close-stdout.result
-FAIL tests/userprog/close-stdout
-Test output failed to match any acceptable form.
-
-Acceptable output:
-  (close-stdout) begin
-  close-stdout: exit(-1)
-Differences in `diff -u' format:
-  (close-stdout) begin
-- close-stdout: exit(-1)
-+ System call not implemented yet 12
-+ (close-stdout) end
-+ close-stdout: exit(0)
-Acceptable output:
-  (close-stdout) begin
-  (close-stdout) end
-  close-stdout: exit(0)
-Differences in `diff -u' format:
-  (close-stdout) begin
-+ System call not implemented yet 12
-  (close-stdout) end
-  close-stdout: exit(0)
+pass tests/userprog/close-stdout
 pintos -v -k -T 60 --qemu  --filesys-size=2 -p tests/userprog/close-bad-fd -a close-bad-fd -- -q  -f run close-bad-fd < /dev/null 2> tests/userprog/close-bad-fd.errors > tests/userprog/close-bad-fd.output
 perl -I../.. ../../tests/userprog/close-bad-fd.ck tests/userprog/close-bad-fd tests/userprog/close-bad-fd.result
-FAIL tests/userprog/close-bad-fd
-Test output failed to match any acceptable form.
-
-Acceptable output:
-  (close-bad-fd) begin
-  (close-bad-fd) end
-  close-bad-fd: exit(0)
-Differences in `diff -u' format:
-  (close-bad-fd) begin
-+ System call not implemented yet 12
-  (close-bad-fd) end
-  close-bad-fd: exit(0)
-Acceptable output:
-  (close-bad-fd) begin
-  close-bad-fd: exit(-1)
-Differences in `diff -u' format:
-  (close-bad-fd) begin
-- close-bad-fd: exit(-1)
-+ System call not implemented yet 12
-+ (close-bad-fd) end
-+ close-bad-fd: exit(0)
+pass tests/userprog/close-bad-fd
 pintos -v -k -T 60 --qemu  --filesys-size=2 -p tests/userprog/read-normal -a read-normal -p ../../tests/userprog/sample.txt -a sample.txt -- -q  -f run read-normal < /dev/null 2> tests/userprog/read-normal.errors > tests/userprog/read-normal.output
 perl -I../.. ../../tests/userprog/read-normal.ck tests/userprog/read-normal tests/userprog/read-normal.result
-FAIL tests/userprog/read-normal
-Kernel panic in run: PANIC at ../../userprog/exception.c:100 in kill(): Kernel bug - unexpected interrupt in kernel
-Call stack: 0xc002871e 0xc0028b98 0x804a1ed
-Translation of call stack:
-In kernel.o:
-0xc002871e: debug_panic (.../../lib/kernel/debug.c:38)
-0xc0028b98: list_insert (.../../lib/kernel/list.c:174)
-In tests/userprog/read-normal:
-0x0804a1ed: open (...../lib/user/syscall.c:105)
-Translations of user virtual addresses above are based on a guess at
-the binary to use.  If this guess is incorrect, then those
-translations will be misleading.
+pass tests/userprog/read-normal
 pintos -v -k -T 60 --qemu  --filesys-size=2 -p tests/userprog/read-bad-ptr -a read-bad-ptr -p ../../tests/userprog/sample.txt -a sample.txt -- -q  -f run read-bad-ptr < /dev/null 2> tests/userprog/read-bad-ptr.errors > tests/userprog/read-bad-ptr.output
 perl -I../.. ../../tests/userprog/read-bad-ptr.ck tests/userprog/read-bad-ptr tests/userprog/read-bad-ptr.result
-FAIL tests/userprog/read-bad-ptr
-Kernel panic in run: PANIC at ../../userprog/exception.c:100 in kill(): Kernel bug - unexpected interrupt in kernel
-Call stack: 0xc002871e 0xc0028b98 0x804a21d
-Translation of call stack:
-In kernel.o:
-0xc002871e: debug_panic (.../../lib/kernel/debug.c:38)
-0xc0028b98: list_insert (.../../lib/kernel/list.c:174)
-In tests/userprog/read-bad-ptr:
-0x0804a21d: open (...../lib/user/syscall.c:105)
-Translations of user virtual addresses above are based on a guess at
-the binary to use.  If this guess is incorrect, then those
-translations will be misleading.
+pass tests/userprog/read-bad-ptr
 pintos -v -k -T 60 --qemu  --filesys-size=2 -p tests/userprog/read-boundary -a read-boundary -p ../../tests/userprog/sample.txt -a sample.txt -- -q  -f run read-boundary < /dev/null 2> tests/userprog/read-boundary.errors > tests/userprog/read-boundary.output
 perl -I../.. ../../tests/userprog/read-boundary.ck tests/userprog/read-boundary tests/userprog/read-boundary.result
-FAIL tests/userprog/read-boundary
-Kernel panic in run: PANIC at ../../userprog/exception.c:100 in kill(): Kernel bug - unexpected interrupt in kernel
-Call stack: 0xc002871e 0xc0028b98 0x804a30d
-Translation of call stack:
-In kernel.o:
-0xc002871e: debug_panic (.../../lib/kernel/debug.c:38)
-0xc0028b98: list_insert (.../../lib/kernel/list.c:174)
-In tests/userprog/read-boundary:
-0x0804a30d: open (...../lib/user/syscall.c:105)
-Translations of user virtual addresses above are based on a guess at
-the binary to use.  If this guess is incorrect, then those
-translations will be misleading.
+pass tests/userprog/read-boundary
 pintos -v -k -T 60 --qemu  --filesys-size=2 -p tests/userprog/read-zero -a read-zero -p ../../tests/userprog/sample.txt -a sample.txt -- -q  -f run read-zero < /dev/null 2> tests/userprog/read-zero.errors > tests/userprog/read-zero.output
 perl -I../.. ../../tests/userprog/read-zero.ck tests/userprog/read-zero tests/userprog/read-zero.result
-FAIL tests/userprog/read-zero
-Kernel panic in run: PANIC at ../../userprog/exception.c:100 in kill(): Kernel bug - unexpected interrupt in kernel
-Call stack: 0xc002871e 0xc0028b98 0x804a23d
-Translation of call stack:
-In kernel.o:
-0xc002871e: debug_panic (.../../lib/kernel/debug.c:38)
-0xc0028b98: list_insert (.../../lib/kernel/list.c:174)
-In tests/userprog/read-zero:
-0x0804a23d: open (...../lib/user/syscall.c:105)
-Translations of user virtual addresses above are based on a guess at
-the binary to use.  If this guess is incorrect, then those
-translations will be misleading.
+pass tests/userprog/read-zero
 pintos -v -k -T 60 --qemu  --filesys-size=2 -p tests/userprog/read-stdout -a read-stdout -- -q  -f run read-stdout < /dev/null 2> tests/userprog/read-stdout.errors > tests/userprog/read-stdout.output
 perl -I../.. ../../tests/userprog/read-stdout.ck tests/userprog/read-stdout tests/userprog/read-stdout.result
-FAIL tests/userprog/read-stdout
-Test output failed to match any acceptable form.
-
-Acceptable output:
-  (read-stdout) begin
-  read-stdout: exit(-1)
-Differences in `diff -u' format:
-  (read-stdout) begin
-- read-stdout: exit(-1)
-+ System call not implemented yet 8
-+ (read-stdout) end
-+ read-stdout: exit(0)
-Acceptable output:
-  (read-stdout) begin
-  (read-stdout) end
-  read-stdout: exit(0)
-Differences in `diff -u' format:
-  (read-stdout) begin
-+ System call not implemented yet 8
-  (read-stdout) end
-  read-stdout: exit(0)
+pass tests/userprog/read-stdout
 pintos -v -k -T 60 --qemu  --filesys-size=2 -p tests/userprog/read-bad-fd -a read-bad-fd -- -q  -f run read-bad-fd < /dev/null 2> tests/userprog/read-bad-fd.errors > tests/userprog/read-bad-fd.output
 perl -I../.. ../../tests/userprog/read-bad-fd.ck tests/userprog/read-bad-fd tests/userprog/read-bad-fd.result
-FAIL tests/userprog/read-bad-fd
-Test output failed to match any acceptable form.
-
-Acceptable output:
-  (read-bad-fd) begin
-  (read-bad-fd) end
-  read-bad-fd: exit(0)
-Differences in `diff -u' format:
-  (read-bad-fd) begin
-+ System call not implemented yet 8
-+ System call not implemented yet 8
-+ System call not implemented yet 8
-+ System call not implemented yet 8
-+ System call not implemented yet 8
-+ System call not implemented yet 8
-+ System call not implemented yet 8
-  (read-bad-fd) end
-  read-bad-fd: exit(0)
-Acceptable output:
-  (read-bad-fd) begin
-  read-bad-fd: exit(-1)
-Differences in `diff -u' format:
-  (read-bad-fd) begin
-- read-bad-fd: exit(-1)
-+ System call not implemented yet 8
-+ System call not implemented yet 8
-+ System call not implemented yet 8
-+ System call not implemented yet 8
-+ System call not implemented yet 8
-+ System call not implemented yet 8
-+ System call not implemented yet 8
-+ (read-bad-fd) end
-+ read-bad-fd: exit(0)
+pass tests/userprog/read-bad-fd
 pintos -v -k -T 60 --qemu  --filesys-size=2 -p tests/userprog/write-normal -a write-normal -p ../../tests/userprog/sample.txt -a sample.txt -- -q  -f run write-normal < /dev/null 2> tests/userprog/write-normal.errors > tests/userprog/write-normal.output
 perl -I../.. ../../tests/userprog/write-normal.ck tests/userprog/write-normal tests/userprog/write-normal.result
-FAIL tests/userprog/write-normal
-Kernel panic in run: PANIC at ../../userprog/exception.c:100 in kill(): Kernel bug - unexpected interrupt in kernel
-Call stack: 0xc002871e 0xc0028b98 0x804a25d
-Translation of call stack:
-In kernel.o:
-0xc002871e: debug_panic (.../../lib/kernel/debug.c:38)
-0xc0028b98: list_insert (.../../lib/kernel/list.c:174)
-In tests/userprog/write-normal:
-0x0804a25d: open (...../lib/user/syscall.c:105)
-Translations of user virtual addresses above are based on a guess at
-the binary to use.  If this guess is incorrect, then those
-translations will be misleading.
+pass tests/userprog/write-normal
 pintos -v -k -T 60 --qemu  --filesys-size=2 -p tests/userprog/write-bad-ptr -a write-bad-ptr -p ../../tests/userprog/sample.txt -a sample.txt -- -q  -f run write-bad-ptr < /dev/null 2> tests/userprog/write-bad-ptr.errors > tests/userprog/write-bad-ptr.output
 perl -I../.. ../../tests/userprog/write-bad-ptr.ck tests/userprog/write-bad-ptr tests/userprog/write-bad-ptr.result
-FAIL tests/userprog/write-bad-ptr
-Kernel panic in run: PANIC at ../../userprog/exception.c:100 in kill(): Kernel bug - unexpected interrupt in kernel
-Call stack: 0xc002871e 0xc0028b98 0x804a21d
-Translation of call stack:
-In kernel.o:
-0xc002871e: debug_panic (.../../lib/kernel/debug.c:38)
-0xc0028b98: list_insert (.../../lib/kernel/list.c:174)
-In tests/userprog/write-bad-ptr:
-0x0804a21d: open (...../lib/user/syscall.c:105)
-Translations of user virtual addresses above are based on a guess at
-the binary to use.  If this guess is incorrect, then those
-translations will be misleading.
+pass tests/userprog/write-bad-ptr
 pintos -v -k -T 60 --qemu  --filesys-size=2 -p tests/userprog/write-boundary -a write-boundary -p ../../tests/userprog/sample.txt -a sample.txt -- -q  -f run write-boundary < /dev/null 2> tests/userprog/write-boundary.errors > tests/userprog/write-boundary.output
 perl -I../.. ../../tests/userprog/write-boundary.ck tests/userprog/write-boundary tests/userprog/write-boundary.result
-FAIL tests/userprog/write-boundary
-Kernel panic in run: PANIC at ../../userprog/exception.c:100 in kill(): Kernel bug - unexpected interrupt in kernel
-Call stack: 0xc002871e 0xc0028b98 0x804a2cd
-Translation of call stack:
-In kernel.o:
-0xc002871e: debug_panic (.../../lib/kernel/debug.c:38)
-0xc0028b98: list_insert (.../../lib/kernel/list.c:174)
-In tests/userprog/write-boundary:
-0x0804a2cd: open (...../lib/user/syscall.c:105)
-Translations of user virtual addresses above are based on a guess at
-the binary to use.  If this guess is incorrect, then those
-translations will be misleading.
+pass tests/userprog/write-boundary
 pintos -v -k -T 60 --qemu  --filesys-size=2 -p tests/userprog/write-zero -a write-zero -p ../../tests/userprog/sample.txt -a sample.txt -- -q  -f run write-zero < /dev/null 2> tests/userprog/write-zero.errors > tests/userprog/write-zero.output
 perl -I../.. ../../tests/userprog/write-zero.ck tests/userprog/write-zero tests/userprog/write-zero.result
-FAIL tests/userprog/write-zero
-Kernel panic in run: PANIC at ../../userprog/exception.c:100 in kill(): Kernel bug - unexpected interrupt in kernel
-Call stack: 0xc002871e 0xc0028b98 0x804a22d
-Translation of call stack:
-In kernel.o:
-0xc002871e: debug_panic (.../../lib/kernel/debug.c:38)
-0xc0028b98: list_insert (.../../lib/kernel/list.c:174)
-In tests/userprog/write-zero:
-0x0804a22d: open (...../lib/user/syscall.c:105)
-Translations of user virtual addresses above are based on a guess at
-the binary to use.  If this guess is incorrect, then those
-translations will be misleading.
+pass tests/userprog/write-zero
 pintos -v -k -T 60 --qemu  --filesys-size=2 -p tests/userprog/write-stdin -a write-stdin -- -q  -f run write-stdin < /dev/null 2> tests/userprog/write-stdin.errors > tests/userprog/write-stdin.output
 perl -I../.. ../../tests/userprog/write-stdin.ck tests/userprog/write-stdin tests/userprog/write-stdin.result
-FAIL tests/userprog/write-stdin
-Test output failed to match any acceptable form.
-
-Acceptable output:
-  (write-stdin) begin
-  (write-stdin) end
-  write-stdin: exit(0)
-Differences in `diff -u' format:
-  (write-stdin) begin
-+ Not supposed to print anywhere else for now
-  (write-stdin) end
-  write-stdin: exit(0)
-Acceptable output:
-  (write-stdin) begin
-  write-stdin: exit(-1)
-Differences in `diff -u' format:
-  (write-stdin) begin
-- write-stdin: exit(-1)
-+ Not supposed to print anywhere else for now
-+ (write-stdin) end
-+ write-stdin: exit(0)
+pass tests/userprog/write-stdin
 pintos -v -k -T 60 --qemu  --filesys-size=2 -p tests/userprog/write-bad-fd -a write-bad-fd -- -q  -f run write-bad-fd < /dev/null 2> tests/userprog/write-bad-fd.errors > tests/userprog/write-bad-fd.output
 perl -I../.. ../../tests/userprog/write-bad-fd.ck tests/userprog/write-bad-fd tests/userprog/write-bad-fd.result
-FAIL tests/userprog/write-bad-fd
-Test output failed to match any acceptable form.
-
-Acceptable output:
-  (write-bad-fd) begin
-  write-bad-fd: exit(-1)
-Differences in `diff -u' format:
-  (write-bad-fd) begin
-- write-bad-fd: exit(-1)
-+ Not supposed to print anywhere else for now
-+ Not supposed to print anywhere else for now
-+ Not supposed to print anywhere else for now
-+ Not supposed to print anywhere else for now
-+ Not supposed to print anywhere else for now
-+ Not supposed to print anywhere else for now
-+ Not supposed to print anywhere else for now
-+ (write-bad-fd) end
-+ write-bad-fd: exit(0)
-Acceptable output:
-  (write-bad-fd) begin
-  (write-bad-fd) end
-  write-bad-fd: exit(0)
-Differences in `diff -u' format:
-  (write-bad-fd) begin
-+ Not supposed to print anywhere else for now
-+ Not supposed to print anywhere else for now
-+ Not supposed to print anywhere else for now
-+ Not supposed to print anywhere else for now
-+ Not supposed to print anywhere else for now
-+ Not supposed to print anywhere else for now
-+ Not supposed to print anywhere else for now
-  (write-bad-fd) end
-  write-bad-fd: exit(0)
+pass tests/userprog/write-bad-fd
 pintos -v -k -T 60 --qemu  --filesys-size=2 -p tests/userprog/exec-once -a exec-once -p tests/userprog/child-simple -a child-simple -- -q  -f run exec-once < /dev/null 2> tests/userprog/exec-once.errors > tests/userprog/exec-once.output
 perl -I../.. ../../tests/userprog/exec-once.ck tests/userprog/exec-once tests/userprog/exec-once.result
 pass tests/userprog/exec-once
@@ -523,60 +286,19 @@ perl -I../.. ../../tests/userprog/multi-recurse.ck tests/userprog/multi-recurse 
 pass tests/userprog/multi-recurse
 pintos -v -k -T 60 --qemu  --filesys-size=2 -p tests/userprog/multi-child-fd -a multi-child-fd -p ../../tests/userprog/sample.txt -a sample.txt -p tests/userprog/child-close -a child-close -- -q  -f run multi-child-fd < /dev/null 2> tests/userprog/multi-child-fd.errors > tests/userprog/multi-child-fd.output
 perl -I../.. ../../tests/userprog/multi-child-fd.ck tests/userprog/multi-child-fd tests/userprog/multi-child-fd.result
-FAIL tests/userprog/multi-child-fd
-Kernel panic in run: PANIC at ../../userprog/exception.c:100 in kill(): Kernel bug - unexpected interrupt in kernel
-Call stack: 0xc002871e 0xc0028b98 0x804a25d
-Translation of call stack:
-In kernel.o:
-0xc002871e: debug_panic (.../../lib/kernel/debug.c:38)
-0xc0028b98: list_insert (.../../lib/kernel/list.c:174)
-In tests/userprog/multi-child-fd:
-0x0804a25d: open (...../lib/user/syscall.c:105)
-Translations of user virtual addresses above are based on a guess at
-the binary to use.  If this guess is incorrect, then those
-translations will be misleading.
+pass tests/userprog/multi-child-fd
 pintos -v -k -T 60 --qemu  --filesys-size=2 -p tests/userprog/rox-simple -a rox-simple -- -q  -f run rox-simple < /dev/null 2> tests/userprog/rox-simple.errors > tests/userprog/rox-simple.output
 perl -I../.. ../../tests/userprog/rox-simple.ck tests/userprog/rox-simple tests/userprog/rox-simple.result
 FAIL tests/userprog/rox-simple
-Kernel panic in run: PANIC at ../../userprog/exception.c:100 in kill(): Kernel bug - unexpected interrupt in kernel
-Call stack: 0xc002871e 0xc0028b98 0x804a25d
-Translation of call stack:
-In kernel.o:
-0xc002871e: debug_panic (.../../lib/kernel/debug.c:38)
-0xc0028b98: list_insert (.../../lib/kernel/list.c:174)
-In tests/userprog/rox-simple:
-0x0804a25d: open (...../lib/user/syscall.c:105)
-Translations of user virtual addresses above are based on a guess at
-the binary to use.  If this guess is incorrect, then those
-translations will be misleading.
+run: try to write "rox-simple": FAILED
 pintos -v -k -T 60 --qemu  --filesys-size=2 -p tests/userprog/rox-child -a rox-child -p tests/userprog/child-rox -a child-rox -- -q  -f run rox-child < /dev/null 2> tests/userprog/rox-child.errors > tests/userprog/rox-child.output
 perl -I../.. ../../tests/userprog/rox-child.ck tests/userprog/rox-child tests/userprog/rox-child.result
 FAIL tests/userprog/rox-child
-Kernel panic in run: PANIC at ../../userprog/exception.c:100 in kill(): Kernel bug - unexpected interrupt in kernel
-Call stack: 0xc002871e 0xc0028b98 0x804a32d
-Translation of call stack:
-In kernel.o:
-0xc002871e: debug_panic (.../../lib/kernel/debug.c:38)
-0xc0028b98: list_insert (.../../lib/kernel/list.c:174)
-In tests/userprog/rox-child:
-0x0804a32d: open (...../lib/user/syscall.c:105)
-Translations of user virtual addresses above are based on a guess at
-the binary to use.  If this guess is incorrect, then those
-translations will be misleading.
+run: TIMEOUT after 61 seconds of wall-clock time - load average: 0.39, 0.41, 0.31
 pintos -v -k -T 60 --qemu  --filesys-size=2 -p tests/userprog/rox-multichild -a rox-multichild -p tests/userprog/child-rox -a child-rox -- -q  -f run rox-multichild < /dev/null 2> tests/userprog/rox-multichild.errors > tests/userprog/rox-multichild.output
 perl -I../.. ../../tests/userprog/rox-multichild.ck tests/userprog/rox-multichild tests/userprog/rox-multichild.result
 FAIL tests/userprog/rox-multichild
-Kernel panic in run: PANIC at ../../userprog/exception.c:100 in kill(): Kernel bug - unexpected interrupt in kernel
-Call stack: 0xc002871e 0xc0028b98 0x804a32d
-Translation of call stack:
-In kernel.o:
-0xc002871e: debug_panic (.../../lib/kernel/debug.c:38)
-0xc0028b98: list_insert (.../../lib/kernel/list.c:174)
-In tests/userprog/rox-multichild:
-0x0804a32d: open (...../lib/user/syscall.c:105)
-Translations of user virtual addresses above are based on a guess at
-the binary to use.  If this guess is incorrect, then those
-translations will be misleading.
+run: TIMEOUT after 61 seconds of wall-clock time - load average: 0.17, 0.35, 0.29
 pintos -v -k -T 60 --qemu  --filesys-size=2 -p tests/userprog/bad-read -a bad-read -- -q  -f run bad-read < /dev/null 2> tests/userprog/bad-read.errors > tests/userprog/bad-read.output
 perl -I../.. ../../tests/userprog/bad-read.ck tests/userprog/bad-read tests/userprog/bad-read.result
 pass tests/userprog/bad-read
@@ -598,69 +320,50 @@ pass tests/userprog/bad-jump2
 pintos -v -k -T 360 --qemu  --filesys-size=2 -p tests/userprog/no-vm/multi-oom -a multi-oom -- -q  -f run multi-oom < /dev/null 2> tests/userprog/no-vm/multi-oom.errors > tests/userprog/no-vm/multi-oom.output
 perl -I../.. ../../tests/userprog/no-vm/multi-oom.ck tests/userprog/no-vm/multi-oom tests/userprog/no-vm/multi-oom.result
 FAIL tests/userprog/no-vm/multi-oom
-Kernel panic in run: PANIC at ../../userprog/exception.c:100 in kill(): Kernel bug - unexpected interrupt in kernel
-Call stack: 0xc002871e 0xc0028b98 0x804a81d
-Translation of call stack:
-In kernel.o:
-0xc002871e: debug_panic (.../../lib/kernel/debug.c:38)
-0xc0028b98: list_insert (.../../lib/kernel/list.c:174)
-In tests/userprog/no-vm/multi-oom:
-0x0804a81d: open (...../lib/user/syscall.c:105)
-Translations of user virtual addresses above are based on a guess at
-the binary to use.  If this guess is incorrect, then those
-translations will be misleading.
+run: TIMEOUT after 361 seconds of wall-clock time - load average: 0.31, 0.21, 0.23
 pintos -v -k -T 60 --qemu  --filesys-size=2 -p tests/filesys/base/lg-create -a lg-create -- -q  -f run lg-create < /dev/null 2> tests/filesys/base/lg-create.errors > tests/filesys/base/lg-create.output
 perl -I../.. ../../tests/filesys/base/lg-create.ck tests/filesys/base/lg-create tests/filesys/base/lg-create.result
-FAIL tests/filesys/base/lg-create
-run: create "blargle": FAILED
+pass tests/filesys/base/lg-create
 pintos -v -k -T 60 --qemu  --filesys-size=2 -p tests/filesys/base/lg-full -a lg-full -- -q  -f run lg-full < /dev/null 2> tests/filesys/base/lg-full.errors > tests/filesys/base/lg-full.output
 perl -I../.. ../../tests/filesys/base/lg-full.ck tests/filesys/base/lg-full tests/filesys/base/lg-full.result
-FAIL tests/filesys/base/lg-full
-run: create "quux": FAILED
+pass tests/filesys/base/lg-full
 pintos -v -k -T 60 --qemu  --filesys-size=2 -p tests/filesys/base/lg-random -a lg-random -- -q  -f run lg-random < /dev/null 2> tests/filesys/base/lg-random.errors > tests/filesys/base/lg-random.output
 perl -I../.. ../../tests/filesys/base/lg-random.ck tests/filesys/base/lg-random tests/filesys/base/lg-random.result
 FAIL tests/filesys/base/lg-random
-run: create "bazzle": FAILED
+run: read 512 bytes at offset 16896 failed: FAILED
 pintos -v -k -T 60 --qemu  --filesys-size=2 -p tests/filesys/base/lg-seq-block -a lg-seq-block -- -q  -f run lg-seq-block < /dev/null 2> tests/filesys/base/lg-seq-block.errors > tests/filesys/base/lg-seq-block.output
 perl -I../.. ../../tests/filesys/base/lg-seq-block.ck tests/filesys/base/lg-seq-block tests/filesys/base/lg-seq-block.result
-FAIL tests/filesys/base/lg-seq-block
-run: create "noodle": FAILED
+pass tests/filesys/base/lg-seq-block
 pintos -v -k -T 60 --qemu  --filesys-size=2 -p tests/filesys/base/lg-seq-random -a lg-seq-random -- -q  -f run lg-seq-random < /dev/null 2> tests/filesys/base/lg-seq-random.errors > tests/filesys/base/lg-seq-random.output
 perl -I../.. ../../tests/filesys/base/lg-seq-random.ck tests/filesys/base/lg-seq-random tests/filesys/base/lg-seq-random.result
-FAIL tests/filesys/base/lg-seq-random
-run: create "nibble": FAILED
+pass tests/filesys/base/lg-seq-random
 pintos -v -k -T 60 --qemu  --filesys-size=2 -p tests/filesys/base/sm-create -a sm-create -- -q  -f run sm-create < /dev/null 2> tests/filesys/base/sm-create.errors > tests/filesys/base/sm-create.output
 perl -I../.. ../../tests/filesys/base/sm-create.ck tests/filesys/base/sm-create tests/filesys/base/sm-create.result
-FAIL tests/filesys/base/sm-create
-run: create "blargle": FAILED
+pass tests/filesys/base/sm-create
 pintos -v -k -T 60 --qemu  --filesys-size=2 -p tests/filesys/base/sm-full -a sm-full -- -q  -f run sm-full < /dev/null 2> tests/filesys/base/sm-full.errors > tests/filesys/base/sm-full.output
 perl -I../.. ../../tests/filesys/base/sm-full.ck tests/filesys/base/sm-full tests/filesys/base/sm-full.result
-FAIL tests/filesys/base/sm-full
-run: create "quux": FAILED
+pass tests/filesys/base/sm-full
 pintos -v -k -T 60 --qemu  --filesys-size=2 -p tests/filesys/base/sm-random -a sm-random -- -q  -f run sm-random < /dev/null 2> tests/filesys/base/sm-random.errors > tests/filesys/base/sm-random.output
 perl -I../.. ../../tests/filesys/base/sm-random.ck tests/filesys/base/sm-random tests/filesys/base/sm-random.result
 FAIL tests/filesys/base/sm-random
-run: create "bazzle": FAILED
+run: read 13 bytes at offset 260 failed: FAILED
 pintos -v -k -T 60 --qemu  --filesys-size=2 -p tests/filesys/base/sm-seq-block -a sm-seq-block -- -q  -f run sm-seq-block < /dev/null 2> tests/filesys/base/sm-seq-block.errors > tests/filesys/base/sm-seq-block.output
 perl -I../.. ../../tests/filesys/base/sm-seq-block.ck tests/filesys/base/sm-seq-block tests/filesys/base/sm-seq-block.result
-FAIL tests/filesys/base/sm-seq-block
-run: create "noodle": FAILED
+pass tests/filesys/base/sm-seq-block
 pintos -v -k -T 60 --qemu  --filesys-size=2 -p tests/filesys/base/sm-seq-random -a sm-seq-random -- -q  -f run sm-seq-random < /dev/null 2> tests/filesys/base/sm-seq-random.errors > tests/filesys/base/sm-seq-random.output
 perl -I../.. ../../tests/filesys/base/sm-seq-random.ck tests/filesys/base/sm-seq-random tests/filesys/base/sm-seq-random.result
-FAIL tests/filesys/base/sm-seq-random
-run: create "nibble": FAILED
+pass tests/filesys/base/sm-seq-random
 pintos -v -k -T 300 --qemu  --filesys-size=2 -p tests/filesys/base/syn-read -a syn-read -p tests/filesys/base/child-syn-read -a child-syn-read -- -q  -f run syn-read < /dev/null 2> tests/filesys/base/syn-read.errors > tests/filesys/base/syn-read.output
 perl -I../.. ../../tests/filesys/base/syn-read.ck tests/filesys/base/syn-read tests/filesys/base/syn-read.result
-FAIL tests/filesys/base/syn-read
-run: create "data": FAILED
+pass tests/filesys/base/syn-read
 pintos -v -k -T 60 --qemu  --filesys-size=2 -p tests/filesys/base/syn-remove -a syn-remove -- -q  -f run syn-remove < /dev/null 2> tests/filesys/base/syn-remove.errors > tests/filesys/base/syn-remove.output
 perl -I../.. ../../tests/filesys/base/syn-remove.ck tests/filesys/base/syn-remove tests/filesys/base/syn-remove.result
 FAIL tests/filesys/base/syn-remove
-run: create "deleteme": FAILED
+run: read "deleteme": FAILED
 pintos -v -k -T 60 --qemu  --filesys-size=2 -p tests/filesys/base/syn-write -a syn-write -p tests/filesys/base/child-syn-wrt -a child-syn-wrt -- -q  -f run syn-write < /dev/null 2> tests/filesys/base/syn-write.errors > tests/filesys/base/syn-write.output
 perl -I../.. ../../tests/filesys/base/syn-write.ck tests/filesys/base/syn-write tests/filesys/base/syn-write.result
 FAIL tests/filesys/base/syn-write
-run: create "stuff": FAILED
+run: 124 bytes read starting at offset 0 in "stuff" differ from expected: FAILED
 pass tests/userprog/args-none
 pass tests/userprog/args-single
 pass tests/userprog/args-multiple
@@ -674,35 +377,35 @@ pass tests/userprog/halt
 pass tests/userprog/exit
 pass tests/userprog/create-normal
 pass tests/userprog/create-empty
-FAIL tests/userprog/create-null
-FAIL tests/userprog/create-bad-ptr
+pass tests/userprog/create-null
+pass tests/userprog/create-bad-ptr
 pass tests/userprog/create-long
-FAIL tests/userprog/create-exists
-FAIL tests/userprog/create-bound
-FAIL tests/userprog/open-normal
-FAIL tests/userprog/open-missing
-FAIL tests/userprog/open-boundary
-FAIL tests/userprog/open-empty
+pass tests/userprog/create-exists
+pass tests/userprog/create-bound
+pass tests/userprog/open-normal
+pass tests/userprog/open-missing
+pass tests/userprog/open-boundary
+pass tests/userprog/open-empty
 pass tests/userprog/open-null
 pass tests/userprog/open-bad-ptr
-FAIL tests/userprog/open-twice
-FAIL tests/userprog/close-normal
-FAIL tests/userprog/close-twice
-FAIL tests/userprog/close-stdin
-FAIL tests/userprog/close-stdout
-FAIL tests/userprog/close-bad-fd
-FAIL tests/userprog/read-normal
-FAIL tests/userprog/read-bad-ptr
-FAIL tests/userprog/read-boundary
-FAIL tests/userprog/read-zero
-FAIL tests/userprog/read-stdout
-FAIL tests/userprog/read-bad-fd
-FAIL tests/userprog/write-normal
-FAIL tests/userprog/write-bad-ptr
-FAIL tests/userprog/write-boundary
-FAIL tests/userprog/write-zero
-FAIL tests/userprog/write-stdin
-FAIL tests/userprog/write-bad-fd
+pass tests/userprog/open-twice
+pass tests/userprog/close-normal
+pass tests/userprog/close-twice
+pass tests/userprog/close-stdin
+pass tests/userprog/close-stdout
+pass tests/userprog/close-bad-fd
+pass tests/userprog/read-normal
+pass tests/userprog/read-bad-ptr
+pass tests/userprog/read-boundary
+pass tests/userprog/read-zero
+pass tests/userprog/read-stdout
+pass tests/userprog/read-bad-fd
+pass tests/userprog/write-normal
+pass tests/userprog/write-bad-ptr
+pass tests/userprog/write-boundary
+pass tests/userprog/write-zero
+pass tests/userprog/write-stdin
+pass tests/userprog/write-bad-fd
 pass tests/userprog/exec-once
 pass tests/userprog/exec-arg
 pass tests/userprog/exec-multiple
@@ -713,7 +416,7 @@ pass tests/userprog/wait-twice
 pass tests/userprog/wait-killed
 pass tests/userprog/wait-bad-pid
 pass tests/userprog/multi-recurse
-FAIL tests/userprog/multi-child-fd
+pass tests/userprog/multi-child-fd
 FAIL tests/userprog/rox-simple
 FAIL tests/userprog/rox-child
 FAIL tests/userprog/rox-multichild
@@ -724,20 +427,20 @@ pass tests/userprog/bad-write2
 pass tests/userprog/bad-jump
 pass tests/userprog/bad-jump2
 FAIL tests/userprog/no-vm/multi-oom
-FAIL tests/filesys/base/lg-create
-FAIL tests/filesys/base/lg-full
+pass tests/filesys/base/lg-create
+pass tests/filesys/base/lg-full
 FAIL tests/filesys/base/lg-random
-FAIL tests/filesys/base/lg-seq-block
-FAIL tests/filesys/base/lg-seq-random
-FAIL tests/filesys/base/sm-create
-FAIL tests/filesys/base/sm-full
+pass tests/filesys/base/lg-seq-block
+pass tests/filesys/base/lg-seq-random
+pass tests/filesys/base/sm-create
+pass tests/filesys/base/sm-full
 FAIL tests/filesys/base/sm-random
-FAIL tests/filesys/base/sm-seq-block
-FAIL tests/filesys/base/sm-seq-random
-FAIL tests/filesys/base/syn-read
+pass tests/filesys/base/sm-seq-block
+pass tests/filesys/base/sm-seq-random
+pass tests/filesys/base/syn-read
 FAIL tests/filesys/base/syn-remove
 FAIL tests/filesys/base/syn-write
-44 of 76 tests failed.
+8 of 76 tests failed.
 make[1]: *** [check] Error 1
 make[1]: Leaving directory `/home/osboxes/pintos/src/userprog/build'
 make: *** [check] Error 2
